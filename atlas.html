@@ -3,732 +3,1121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1e3a5f">
-    <title>Anatomia Interativa - ASM Fisioterapia</title>
+    <title>ASM Gestão Atlas - Dra. Andresa Augusto</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; color: #2c3e50; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { background: linear-gradient(135deg, #1e3a5f 0%, #2c3e50 100%); color: white; padding: 30px 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        header h1 { font-size: 2.5em; margin-bottom: 10px; }
-        .gold-accent { color: #d4af37; font-weight: bold; }
-        nav { background: white; padding: 15px; margin: 20px 0; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        .nav-btn { background: #ecf0f1; border: none; padding: 12px 24px; border-radius: 25px; cursor: pointer; font-size: 1em; transition: all 0.3s; color: #2c3e50; font-weight: 600; }
-        .nav-btn:hover { background: #d4af37; color: white; transform: translateY(-2px); }
-        .nav-btn.active { background: #1e3a5f; color: white; }
-        .section { display: none; animation: fadeIn 0.5s; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: white; border-radius: 20px; padding: 30px; margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .card h2 { color: #1e3a5f; margin-bottom: 20px; font-size: 1.8em; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
-        .btn { background: linear-gradient(135deg, #1e3a5f 0%, #2c3e50 100%); color: white; border: none; padding: 15px 30px; border-radius: 30px; cursor: pointer; font-size: 1.1em; transition: all 0.3s; display: inline-block; margin: 5px; font-weight: 600; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(30,58,95,0.4); }
-        .btn-gold { background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%); }
-        .quiz-container { max-width: 800px; margin: 0 auto; }
-        .question-box { background: #f8f9fa; padding: 30px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #d4af37; }
-        .question-text { font-size: 1.3em; color: #1e3a5f; margin-bottom: 20px; font-weight: 600; }
-        .quiz-option { background: white; border: 2px solid #e0e0e0; padding: 15px; margin: 10px 0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: left; width: 100%; font-size: 1em; }
-        .quiz-option:hover { border-color: #d4af37; background: #fffef5; }
-        .quiz-option.correct { background: #d4edda; border-color: #27ae60; color: #155724; }
-        .quiz-option.wrong { background: #f8d7da; border-color: #e74c3c; color: #721c24; }
-        .progress-bar { background: #e0e0e0; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { background: linear-gradient(90deg, #d4af37 0%, #1e3a5f 100%); height: 100%; transition: width 0.5s; }
-        .result-box { text-align: center; padding: 40px; }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #1e3a5f 0%, #d4af37 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 2.5em; font-weight: bold; }
-        .study-card-container { perspective: 1000px; max-width: 500px; margin: 0 auto; }
-        .study-card { width: 100%; height: 400px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
-        .study-card.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; background: white; }
-        .card-back { transform: rotateY(180deg); background: #f8f9fa; overflow-y: auto; }
-        .card-controls { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .search-box { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .search-input { flex: 1; min-width: 200px; padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 30px; font-size: 1em; }
-        .filter-select { padding: 12px 20px; border: 2px solid #e0e0e0; border-radius: 30px; font-size: 1em; background: white; cursor: pointer; }
-        .muscle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .muscle-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); transition: transform 0.3s; border-left: 4px solid #d4af37; cursor: pointer; }
-        .muscle-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        .muscle-icon { font-size: 3em; margin-bottom: 10px; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; }
-        .modal.active { display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: white; border-radius: 20px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
-        .modal-header { background: linear-gradient(135deg, #1e3a5f 0%, #2c3e50 100%); color: white; padding: 20px; border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 30px; }
-        .close-btn { background: none; border: none; color: white; font-size: 1.5em; cursor: pointer; }
-        .hidden { display: none !important; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: linear-gradient(135deg, #1e3a5f 0%, #2c3e50 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; }
-        .stat-number { font-size: 2.5em; font-weight: bold; color: #d4af37; }
-        @media (max-width: 768px) { header h1 { font-size: 1.8em; } .muscle-grid { grid-template-columns: 1fr; } .study-card { height: 350px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+            min-height: 100vh;
+            color: #e0e1dd;
+            overflow-x: hidden;
+        }
+
+        /* Animação de partículas no fundo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #d4af37;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header suspenso e elegante */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #d4af37;
+            text-shadow: 0 0 20px rgba(212,175,55,0.5);
+            margin-bottom: 10px;
+            position: relative;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #778da9;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .author {
+            color: #d4af37;
+            font-size: 1em;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        /* Menu suspenso */
+        .menu-float {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            background: rgba(26, 58, 95, 0.6);
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            background: #d4af37;
+            color: #0d1b2a;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212,175,55,0.4);
+        }
+
+        /* Seções */
+        .section {
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards flutuantes */
+        .card-container {
+            perspective: 1000px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 450px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 2px solid rgba(212,175,55,0.3);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, rgba(26,58,95,0.9) 0%, rgba(13,27,42,0.95) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, rgba(212,175,55,0.95) 0%, rgba(184,148,31,0.9) 100%);
+            transform: rotateY(180deg);
+            color: #0d1b2a;
+            overflow-y: auto;
+        }
+
+        .muscle-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(212,175,55,0.5));
+        }
+
+        .muscle-name {
+            font-size: 2em;
+            color: #d4af37;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .muscle-region {
+            background: rgba(212,175,55,0.2);
+            color: #d4af37;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #d4af37;
+        }
+
+        .tap-hint {
+            margin-top: 30px;
+            color: #778da9;
+            font-size: 0.9em;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .detail-item {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(13,27,42,0.1);
+            border-radius: 15px;
+            border-left: 4px solid #0d1b2a;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #0d1b2a;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .detail-text {
+            color: #1b263b;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Controles suspensos */
+        .controls-float {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #d4af37;
+            background: rgba(26,58,95,0.6);
+            color: #d4af37;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+            background: #d4af37;
+            color: #0d1b2a;
+            transform: scale(1.1);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .counter {
+            background: rgba(212,175,55,0.2);
+            color: #d4af37;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 2px solid #d4af37;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .shuffle-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #0d1b2a;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+        }
+
+        .shuffle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(212,175,55,0.6);
+        }
+
+        /* Quiz simplificado */
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quiz-box {
+            background: rgba(26,58,95,0.6);
+            border-radius: 25px;
+            padding: 40px;
+            border: 2px solid rgba(212,175,55,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-question {
+            font-size: 1.4em;
+            color: #d4af37;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: rgba(13,27,42,0.6);
+            border: 2px solid #778da9;
+            color: #e0e1dd;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-size: 1em;
+        }
+
+        .quiz-option:hover {
+            border-color: #d4af37;
+            background: rgba(212,175,55,0.1);
+            transform: translateX(10px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(39,174,96,0.3);
+            border-color: #27ae60;
+            color: #2ecc71;
+        }
+
+        .quiz-option.wrong {
+            background: rgba(231,76,60,0.3);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(119,141,169,0.3);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37 0%, #f4d03f 100%);
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(212,175,55,0.5);
+        }
+
+        .result-box {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .score-display {
+            font-size: 4em;
+            color: #d4af37;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(212,175,55,0.5);
+        }
+
+        .start-quiz-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #0d1b2a;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.4);
+        }
+
+        .start-quiz-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(212,175,55,0.6);
+        }
+
+        /* Filtros flutuantes */
+        .filters-float {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: rgba(26,58,95,0.6);
+            border: 2px solid #778da9;
+            color: #e0e1dd;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: #d4af37;
+            color: #d4af37;
+            background: rgba(212,175,55,0.1);
+        }
+
+        /* Grid de cards pequenos */
+        .muscles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .mini-card {
+            background: rgba(26,58,95,0.6);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid rgba(212,175,55,0.2);
+            cursor: pointer;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mini-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, transparent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .mini-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .mini-card:hover {
+            transform: translateY(-10px);
+            border-color: #d4af37;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .mini-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .mini-name {
+            color: #d4af37;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .mini-region {
+            color: #778da9;
+            font-size: 0.85em;
+        }
+
+        /* Modal elegante */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1b263b 0%, #0d1b2a 100%);
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #d4af37;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: #0d1b2a;
+            padding: 25px;
+            border-radius: 23px 23px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #0d1b2a;
+            font-size: 2em;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-modal:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-row {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(119,141,169,0.1);
+            border-radius: 15px;
+            border-left: 4px solid #d4af37;
+        }
+
+        .detail-row h4 {
+            color: #d4af37;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-row p {
+            color: #e0e1dd;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .flashcard { height: 400px; }
+            .muscle-name { font-size: 1.5em; }
+            .controls-float { gap: 10px; }
+            .control-btn { width: 50px; height: 50px; }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>🏥 ASM <span class="gold-accent">Fisioterapia</span></h1>
-        <p>Anatomia Interativa - Dra. Andresa Augusto</p>
-    </header>
+    <!-- Partículas animadas no fundo -->
+    <div class="particles" id="particles"></div>
+
     <div class="container">
-        <nav>
-            <button class="nav-btn active" onclick="showSection('home')">🏠 Início</button>
-            <button class="nav-btn" onclick="showSection('quiz')">📝 Quiz</button>
-            <button class="nav-btn" onclick="showSection('study')">🎴 Cards</button>
-            <button class="nav-btn" onclick="showSection('search')">🔍 Buscar</button>
+        <header>
+            <h1>🏥 ASM GESTÃO ATLAS</h1>
+            <p class="subtitle">100 Músculos para Estudo</p>
+            <p class="author">por Dra. Andresa Augusto</p>
+        </header>
+
+        <nav class="menu-float">
+            <button class="menu-btn active" onclick="showSection('cards')">🎴 Flashcards</button>
+            <button class="menu-btn" onclick="showSection('quiz')">📝 Quiz</button>
+            <button class="menu-btn" onclick="showSection('lista')">📋 Lista</button>
         </nav>
-        <section id="home" class="section active">
-            <div class="card">
-                <h2>Bem-vindo à Anatomia Interativa</h2>
-                <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
-                    Explore mais de <strong>100 músculos</strong> do corpo humano de forma interativa. 
-                    Utilize nosso quiz para testar seus conhecimentos, os cards de estudo para memorizar 
-                    ou a busca avançada para encontrar informações específicas.
-                </p>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-number" id="totalMuscles">100+</div><div>Músculos</div></div>
-                    <div class="stat-card"><div class="stat-number" id="totalRegions">5</div><div>Regiões</div></div>
-                    <div class="stat-card"><div class="stat-number" id="avgScore">--</div><div>Média Quiz</div></div>
+
+        <!-- SEÇÃO FLASHCARDS -->
+        <section id="cards" class="section active">
+            <div class="card-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="card-face card-front" id="cardFront">
+                        <div class="muscle-icon">💪</div>
+                        <div class="muscle-name">Carregando...</div>
+                        <div class="muscle-region">...</div>
+                        <div class="tap-hint">👆 Toque para virar</div>
+                    </div>
+                    <div class="card-face card-back" id="cardBack">
+                        <!-- Detalhes aqui -->
+                    </div>
                 </div>
-                <div style="text-align: center;">
-                    <button class="btn btn-gold" onclick="showSection('quiz')">🎯 Iniciar Quiz</button>
-                    <button class="btn" onclick="showSection('study')">📚 Modo Estudo</button>
-                </div>
+            </div>
+
+            <div class="controls-float">
+                <button class="control-btn" onclick="prevCard()" id="btnPrev">◀</button>
+                <div class="counter" id="counter">1/100</div>
+                <button class="control-btn" onclick="nextCard()" id="btnNext">▶</button>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="shuffle-btn" onclick="shuffleCards()">🔀 Embaralhar</button>
             </div>
         </section>
 
+        <!-- SEÇÃO QUIZ -->
         <section id="quiz" class="section">
-            <div class="card quiz-container">
-                <h2>📝 Quiz de Anatomia</h2>
+            <div class="quiz-container">
                 <div id="quizStart">
-                    <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">Teste seus conhecimentos com 10 perguntas aleatórias sobre anatomia muscular!</p>
-                    <div style="text-align: center;">
-                        <button class="btn btn-gold" onclick="startQuiz()">▶️ Iniciar Quiz</button>
-                        <button class="btn" onclick="showQuizHistory()">📊 Ver Histórico</button>
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">🎯</div>
+                        <h2 style="color: #d4af37; margin-bottom: 20px;">Quiz Rápido</h2>
+                        <p style="color: #778da9; margin-bottom: 30px; font-size: 1.1em;">10 perguntas sobre os 100 músculos</p>
+                        <button class="start-quiz-btn" onclick="startQuiz()">▶ Iniciar Quiz</button>
                     </div>
                 </div>
-                <div id="quizContainer" class="hidden">
-                    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 0%"></div></div>
-                    <div style="text-align: center; margin-bottom: 15px; color: #7f8c8d;">Questão <span id="currentQuestion">1</span> de <span id="totalQuestions">10</span></div>
-                    <div class="question-box">
-                        <div class="question-text" id="questionText"></div>
-                        <div id="optionsContainer"></div>
+
+                <div id="quizGame" class="hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+                    </div>
+                    <div style="text-align: center; color: #778da9; margin-bottom: 20px;">
+                        Questão <span id="qNum">1</span>/10
+                    </div>
+                    <div class="quiz-box">
+                        <div class="quiz-question" id="qText">...</div>
+                        <div class="quiz-options" id="qOptions"></div>
                     </div>
                 </div>
-                <div id="resultContainer" class="result-box hidden">
-                    <div class="score-circle"><span id="scoreValue">0</span>/<span id="totalScore">10</span></div>
-                    <h3 id="scoreMessage"></h3>
-                    <div style="margin-top: 20px;">
-                        <button class="btn btn-gold" onclick="startQuiz()">🔄 Novo Quiz</button>
-                        <button class="btn" onclick="showSection('home')">🏠 Voltar ao Início</button>
+
+                <div id="quizEnd" class="hidden">
+                    <div class="result-box">
+                        <div class="score-display" id="finalScore">0/10</div>
+                        <h2 style="color: #d4af37; margin-bottom: 20px;" id="scoreMsg">...</h2>
+                        <button class="start-quiz-btn" onclick="resetQuiz()">🔄 Jogar Novamente</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="study" class="section">
-            <div class="card">
-                <h2>🎴 Cards de Estudo</h2>
-                <p style="text-align: center; margin-bottom: 20px; color: #7f8c8d;">Toque no card para virar e ver os detalhes do músculo</p>
-                <div class="study-card-container">
-                    <div class="study-card" id="studyCard" onclick="flipCard()">
-                        <div class="card-face card-front" id="cardFront"><div style="font-size: 4em;">💪</div><h3>Carregando...</h3></div>
-                        <div class="card-face card-back" id="cardBack"><p>Carregando informações...</p></div>
-                    </div>
-                </div>
-                <div class="card-controls">
-                    <button class="btn" onclick="prevCard()" id="prevCard">◀️ Anterior</button>
-                    <span style="padding: 15px; font-weight: bold; color: #1e3a5f;" id="cardCounter">1/100</span>
-                    <button class="btn" onclick="nextCard()" id="nextCard">Próximo ▶️</button>
-                </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <button class="btn btn-gold" onclick="shuffleCards()">🔀 Embaralhar</button>
-                </div>
+        <!-- SEÇÃO LISTA -->
+        <section id="lista" class="section">
+            <div class="filters-float">
+                <button class="filter-btn active" onclick="filterMuscles('all')">Todos</button>
+                <button class="filter-btn" onclick="filterMuscles('cabeca')">Cabeça</button>
+                <button class="filter-btn" onclick="filterMuscles('pescoco')">Pescoço</button>
+                <button class="filter-btn" onclick="filterMuscles('tronco')">Tronco</button>
+                <button class="filter-btn" onclick="filterMuscles('superior')">Membros Sup.</button>
+                <button class="filter-btn" onclick="filterMuscles('inferior')">Membros Inf.</button>
             </div>
-        </section>
-
-        <section id="search" class="section">
-            <div class="card">
-                <h2>🔍 Buscar Músculos</h2>
-                <div class="search-box">
-                    <input type="text" class="search-input" id="searchInput" placeholder="Digite nome, função, origem...">
-                    <select class="filter-select" id="regionFilter">
-                        <option value="">Todas as regiões</option>
-                        <option value="cabeca">Cabeça</option>
-                        <option value="pescoco">Pescoço</option>
-                        <option value="tronco">Tronco</option>
-                        <option value="superior">Membros Superiores</option>
-                        <option value="inferior">Membros Inferiores</option>
-                    </select>
-                    <select class="filter-select" id="actionFilter">
-                        <option value="">Todas as ações</option>
-                        <option value="flexão">Flexão</option>
-                        <option value="extensão">Extensão</option>
-                        <option value="abdução">Abdução</option>
-                        <option value="adução">Adução</option>
-                        <option value="rotação">Rotação</option>
-                    </select>
-                </div>
-                <div id="searchResults" class="muscle-grid"></div>
-            </div>
+            <div class="muscles-grid" id="musclesList"></div>
         </section>
     </div>
 
-    <div id="historyModal" class="modal" onclick="closeModalOnClick(event, 'historyModal')">
+    <!-- Modal -->
+    <div class="modal" id="detailModal" onclick="closeModalOutside(event)">
         <div class="modal-content">
-            <div class="modal-header"><h3>📊 Histórico de Quizzes</h3><button class="close-btn" onclick="closeModal('historyModal')">×</button></div>
-            <div class="modal-body" id="quizHistory"></div>
-        </div>
-    </div>
-
-    <div id="muscleModal" class="modal" onclick="closeModalOnClick(event, 'muscleModal')">
-        <div class="modal-content">
-            <div class="modal-header"><h3>💪 Detalhes do Músculo</h3><button class="close-btn" onclick="closeModal('muscleModal')">×</button></div>
-            <div class="modal-body" id="detailContent"></div>
+            <div class="modal-header">
+                <h3 id="modalTitle">Detalhes</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
     <script>
-        let musclesDB = {
-            cabeca: [
-                { nome: "Músculo Frontal", icone: "😊", origem: "Galea aponeurótica", insercao: "Pele da região supraorbital", funcao: "Eleva as sobrancelhas", inervacao: "Nervo facial (VII)", irrigacao: "Artérias supratroclear e supraorbital" },
-                { nome: "Músculo Occipital", icone: "🧠", origem: "Protuberância occipital", insercao: "Galea aponeurótica", funcao: "Fixa a galea aponeurótica", inervacao: "Nervo occipital posterior", irrigacao: "Artéria occipital" },
-                { nome: "Músculo Orbicular dos Olhos", icone: "👁️", origem: "Parede medial da órbita", insercao: "Pele das pálpebras", funcao: "Fecha as pálpebras", inervacao: "Nervo facial (VII)", irrigacao: "Artérias lacrimal e supraorbital" },
-                { nome: "Músculo Orbicular da Boca", icone: "👄", origem: "Maxila e mandíbula", insercao: "Pele e mucosa dos lábios", funcao: "Fecha os lábios", inervacao: "Nervo facial (VII)", irrigacao: "Artérias labiais" },
-                { nome: "Músculo Masseter", icone: "🦷", origem: "Arco zigomático", insercao: "Ângulo da mandíbula", funcao: "Eleva a mandíbula", inervacao: "Nervo mandibular (V3)", irrigacao: "Artéria masseterica" },
-                { nome: "Músculo Temporal", icone: "⏱️", origem: "Fossa temporal", insercao: "Processo coronoide da mandíbula", funcao: "Eleva e retrai a mandíbula", inervacao: "Nervo mandibular (V3)", irrigacao: "Artéria temporal" }
-                { nome: "Músculo Longo do Pescoço", icone: "🦒", origem: "Corpos vertebrais T1-C5", insercao: "Corpos C2-C4", funcao: "Flexão do pescoço", inervacao: "Nervos cervicais", irrigacao: "Artérias cervicais" },
-                { nome: "Músculo Longíssimo do Pescoço", icone: "🦒", origem: "Processos transversos T1-T5", insercao: "Processo mastoide", funcao: "Estende a cabeça", inervacao: "Nervos cervicais", irrigacao: "Artérias cervicais" },
-                { nome: "Músculo Esplênio da Cabeça", icone: "🦒", origem: "Processos espinhosos C7-T4", insercao: "Processo mastoide e occipital", funcao: "Estende e rotaciona a cabeça", inervacao: "Nervos cervicais", irrigacao: "Artéria occipital" },
-                { nome: "Músculo Esplênio do Pescoço", icone: "🦒", origem: "Processos espinhosos T3-T6", insercao: "Processos transversos C1-C3", funcao: "Estende e rotaciona o pescoço", inervacao: "Nervos cervicais", irrigacao: "Artérias cervicais" },
-                { nome: "Músculo Semiespinhal da Cabeça", icone: "🦴", origem: "Processos transversos C4-T5", insercao: "Osso occipital", funcao: "Estende a cabeça", inervacao: "Nervos cervicais", irrigacao: "Artéria occipital" },
-                { nome: "Músculo Semiespinhal do Pescoço", icone: "🦴", origem: "Processos transversos T1-T5", insercao: "Processos espinhosos C2-C5", funcao: "Estende o pescoço", inervacao: "Nervos cervicais", irrigacao: "Artérias cervicais" },
-                { nome: "Músculo Multifido", icone: "🔗", origem: "Sacro e ilíaco", insercao: "Processos espinhosos das vértebras superiores", funcao: "Estabiliza e estende a coluna", inervacao: "Nervos espinais", irrigacao: "Artérias lombares e sacrais" },
-                { nome: "Músculo Rotadores", icone: "🔄", origem: "Processos transversos das vértebras inferiores", insercao: "Raízes dos processos espinhosos superiores", funcao: "Rotação da coluna", inervacao: "Nervos espinais", irrigacao: "Artérias segmentares" },
-                { nome: "Músculo Interespinhal", icone: "➡️", origem: "Processos espinhosos adjacentes", insercao: "Processos espinhosos adjacentes", funcao: "Estende a coluna", inervacao: "Nervos espinais", irrigacao: "Artérias segmentares" },
-                { nome: "Músculo Intertransversário", icone: "➡️", origem: "Processos transversos adjacentes", insercao: "Processos transversos adjacentes", funcao: "Flexão lateral da coluna", inervacao: "Nervos espinais", irrigacao: "Artérias segmentares" },
-                { nome: "Músculo Estiloioideo", icone: "🦴", origem: "Processo estiloide", insercao: "Corpo hioide", funcao: "Eleva o assoalho da boca", inervacao: "Nervo facial (VII)", irrigacao: "Artéria lingual" },
-                { nome: "Músculo Estilofaringeo", icone: "👄", origem: "Processo estiloide", insercao: "Parede faríngea", funcao: "Eleva a faringe durante a deglutição", inervacao: "Nervo glossofaringeo (IX)", irrigacao: "Artéria faríngea ascendente" },
-                { nome: "Músculo Faríngeo Constritor Superior", icone: "👄", origem: "Lâmina medial da pterigoide", insercao: "Rafe mediana da faringe", funcao: "Constringe a faringe", inervacao: "Nervo vago (X)", irrigacao: "Artéria faríngea ascendente" },
-                { nome: "Músculo Faríngeo Constritor Médio", icone: "👄", origem: "Cartilagens tireoide e cricoide", insercao: "Rafe mediana da faringe", funcao: "Constringe a faringe", inervacao: "Nervo vago (X)", irrigacao: "Artéria tireoide superior" },
-                { nome: "Músculo Faríngeo Constritor Inferior", icone: "👄", origem: "Cartilagem cricoide e esôfago", insercao: "Rafe mediana da faringe", funcao: "Constringe a faringe", inervacao: "Nervos vago (X) e glossofaringeo (IX)", irrigacao: "Artéria tireoide inferior" },
-                { nome: "Músculo Salpingofaringeo", icone: "👂", origem: "Cartilagem da trompa auditiva", insercao: "Parede faríngea", funcao: "Eleva a faringe", inervacao: "Nervo vago (X)", irrigacao: "Artéria faríngea ascendente" },
-                { nome: "Músculo Palatoglosso", icone: "👅", origem: "Aponeurose palatina", insercao: "Lateral da língua", funcao: "Eleva a base da língua", inervacao: "Nervo vago (X)", irrigacao: "Artéria palatina ascendente" },
-                { nome: "Músculo Palatofaringeo", icone: "👄", origem: "Aponeurose palatina", insercao: "Parede faríngea", funcao: "Eleva a faringe e a úvula", inervacao: "Nervo vago (X)", irrigacao: "Artéria palatina ascendente" },
-                { nome: "Músculo Uvular", icone: "👄", origem: "Aponeurose palatina posterior", insercao: "Mucosa da úvula", funcao: "Eleva a úvula", inervacao: "Nervo vago (X)", irrigacao: "Artéria palatina menor" },
-                { nome: "Músculo Constritor da Faringe", icone: "👄", origem: "Lâmina pterigoide", insercao: "Rafe faríngeo", funcao: "Deglutição", inervacao: "Nervo vago (X)", irrigacao: "Artéria faríngea" }
- ],
-        pescoco: [
-                { nome: "Esternocleidomastoideo", icone: "🦢", origem: "Manúbrio esternal e clavícula", insercao: "Processo mastoide", funcao: "Rotação da cabeça", inervacao: "Nervo acessório (XI)", irrigacao: "Artéria occipital" },
-                { nome: "Trapézio Superior", icone: "🙆", origem: "Occipital e C7-T12", insercao: "Clavícula e escápula", funcao: "Eleva a escápula", inervacao: "Nervo acessório (XI)", irrigacao: "Artéria escapular transversa" },
-                { nome: "Escaleno Anterior", icone: "🫁", origem: "C3-C6", insercao: "1ª costela", funcao: "Eleva a 1ª costela", inervacao: "C4-C6", irrigacao: "Artéria cervical ascendente" },
-                { nome: "Escaleno Médio", icone: "🫁", origem: "C2-C7", insercao: "1ª costela", funcao: "Eleva a 1ª costela", inervacao: "C3-C8", irrigacao: "Artéria cervical ascendente" },
-                { nome: "Escaleno Posterior", icone: "🫁", origem: "C5-C7", insercao: "2ª costela", funcao: "Eleva a 2ª costela", inervacao: "C6-C8", irrigacao: "Artéria cervical ascendente" },
-                { nome: "Platisma", icone: "😰", origem: "Fáscia peitoral", insercao: "Mandíbula", funcao: "Tensão da pele do pescoço", inervacao: "Nervo facial (VII)", irrigacao: "Artéria subclávia" }
-            ],
-            tronco: [
-                { nome: "Peitoral Maior", icone: "💪", origem: "Clavícula, esterno e cartilagens 1-6", insercao: "Crista do tubérculo maior", funcao: "Adução e flexão do braço", inervacao: "Nervos peitorais", irrigacao: "Artéria toracoacromial" },
-                { nome: "Peitoral Menor", icone: "🦴", origem: "Cartilagens 3-5", insercao: "Processo coracoide", funcao: "Deprime a escápula", inervacao: "Nervo peitoral medial", irrigacao: "Artéria toracoacromial" },
-                { nome: "Deltóide", icone: "🎯", origem: "Clavícula, acrômio e espinha", insercao: "Tuberosidade deltoide", funcao: "Abdução do braço", inervacao: "Nervo axilar", irrigacao: "Artéria circunflexa posterior" },
-                { nome: "Reto Abdominal", icone: "🏋️", origem: "Sínfise púbica", insercao: "Processo xifóide e cartilagens 5-7", funcao: "Flexão do tronco", inervacao: "T7-T12", irrigacao: "Artéria epigástrica" },
-                { nome: "Oblíquo Externo", icone: "🔄", origem: "8 últimas costelas", insercao: "Crista ilíaca e linha alba", funcao: "Rotação e flexão do tronco", inervacao: "Nervos intercostais", irrigacao: "Artérias intercostais" },
-                { nome: "Oblíquo Interno", icone: "🔄", origem: "Fáscia toracolombar", insercao: "Cartilagens 10-12 e linha alba", funcao: "Rotação e flexão do tronco", inervacao: "Nervos intercostais", irrigacao: "Artéria lombar" },
-                { nome: "Transverso do Abdome", icone: "➡️", origem: "6 últimas costelas", insercao: "Linha alba", funcao: "Compressão abdominal", inervacao: "T7-T12", irrigacao: "Artéria lombar" },
-                { nome: "Quadrado Lombar", icone: "🔷", origem: "Crista ilíaca", insercao: "12ª costela e L1-L4", funcao: "Flexão lateral do tronco", inervacao: "T12-L3", irrigacao: "Artéria lombar" },
-                { nome: "Eretor da Espinha", icone: "🦴", origem: "Sacro e ilíaco", insercao: "Costelas e vértebras", funcao: "Extensão da coluna", inervacao: "Nervos espinais", irrigacao: "Artérias lombares" },
-                { nome: "Rombóide Maior", icone: "🔶", origem: "T2-T5", insercao: "Borda medial da escápula", funcao: "Aduz a escápula", inervacao: "Nervo dorsal da escápula", irrigacao: "Artéria dorsal da escápula" },
-                { nome: "Rombóide Menor", icone: "🔹", origem: "C7-T1", insercao: "Borda medial da escápula", funcao: "Aduz a escápula", inervacao: "Nervo dorsal da escápula", irrigacao: "Artéria dorsal da escápula" },
-                { nome: "Latíssimo do Dorso", icone: "🪽", origem: "T7-L5, sacro e ilíaco", insercao: "Sulco intertubercular", funcao: "Extensão e adução do braço", inervacao: "Nervo toracodorsal", irrigacao: "Artéria toracodorsal" }
-                            { nome: "Músculo Subclávio", icone: "🦴", origem: "Cartilagem da 1ª costela", insercao: "Face inferior da clavícula", funcao: "Deprime a clavícula", inervacao: "Nervo subclávio", irrigacao: "Artéria toracoacromial" },
-                { nome: "Músculo Levantador da Escápula", icone: "⬆️", origem: "Processos transversos C1-C4", insercao: "Ângulo superior da escápula", funcao: "Eleva a escápula", inervacao: "Nervos cervicais C3-C4", irrigacao: "Artéria cervical transversa" },
-                { nome: "Músculo Infraespinhal", icone: "🦴", origem: "Fossa infraespinhal da escápula", insercao: "Tubérculo maior do úmero", funcao: "Rotação lateral do braço", inervacao: "Nervo supraescapular", irrigacao: "Artéria supraescapular" },
-                { nome: "Músculo Supraespinhal", icone: "🦴", origem: "Fossa supraespinhal da escápula", insercao: "Tubérculo maior do úmero", funcao: "Abdução inicial do braço", inervacao: "Nervo supraescapular", irrigacao: "Artéria supraescapular" },
-                { nome: "Músculo Subescapular", icone: "🦴", origem: "Fossa subescapular", insercao: "Tubérculo menor do úmero", funcao: "Rotação medial do braço", inervacao: "Nervos subescapulares", irrigacao: "Artéria subescapular" },
-                { nome: "Músculo Redondo Maior", icone: "🔄", origem: "Borda inferior da escápula", insercao: "Sulco intertubercular", funcao: "Extensão e rotação medial do braço", inervacao: "Nervo subescapular inferior", irrigacao: "Artéria subescapular" },
-                { nome: "Músculo Redondo Menor", icone: "🔄", origem: "Borda lateral da escápula", insercao: "Tubérculo maior do úmero", funcao: "Rotação lateral do braço", inervacao: "Nervo axilar", irrigacao: "Artéria circunflexa posterior do úmero" },
-                { nome: "Músculo Coracobraquial", icone: "💪", origem: "Processo coracoide da escápula", insercao: "Face medial do úmero", funcao: "Flexão e adução do braço", inervacao: "Nervo musculocutâneo", irrigacao: "Artéria toracoacromial" },
-                { nome: "Músculo Articular do Cotovelo", icone: "🦴", origem: "Úmero distal", insercao: "Cápsula articular", funcao: "Tensão da cápsula articular", inervacao: "Nervo radial", irrigacao: "Artéria colateral radial" },
-                { nome: "Músculo Supinador Curto", icone: "🔄", origem: "Epicôndilo lateral e ligamento colateral", insercao: "Rádio proximal", funcao: "Supinação", inervacao: "Nervo radial", irrigacao: "Artéria radial recorrente" },
-                { nome: "Músculo Interósseo Dorsal", icone: "✋", origem: "Faces adjacentes dos metacarpos", insercao: "Bases das falanges proximais", funcao: "Abdução dos dedos", inervacao: "Nervo ulnar", irrigacao: "Arco palmar dorsal" },
-                { nome: "Músculo Interósseo Palmar", icone: "✋", origem: "Faces adjacentes dos metacarpos", insercao: "Bases das falanges proximais", funcao: "Adução dos dedos", inervacao: "Nervo ulnar", irrigacao: "Arco palmar profundo" },
-                { nome: "Músculo Lumbrical", icone: "🤌", origem: "Tendões do flexor profundo", insercao: "Tendões extensores", funcao: "Flexão MCP e extensão IF", inervacao: "Nervo mediano e ulnar", irrigacao: "Arco palmar" },
-                { nome: "Músculo Adutor do Polegar", icone: "👍", origem: "Capitato e trapézio", insercao: "1º metacarpo", funcao: "Adução do polegar", inervacao: "Nervo ulnar", irrigacao: "Arco palmar profundo" },
-                { nome: "Músculo Flexor Curto do Polegar", icone: "👍", origem: "Trapézio", insercao: "Falange proximal do polegar", funcao: "Flexão do polegar", inervacao: "Nervo mediano", irrigacao: "Arco palmar superficial" },
-                { nome: "Músculo Abdutor do Mínimo", icone: "🤚", origem: "Pisiforme", insercao: "5º metacarpo", funcao: "Abdução do mínimo", inervacao: "Nervo ulnar", irrigacao: "Arco palmar" },
-                { nome: "Músculo Flexor Curto do Mínimo", icone: "🤚", origem: "Gancho do hamato", insercao: "Falange proximal do mínimo", funcao: "Flexão do mínimo", inervacao: "Nervo ulnar", irrigacao: "Arco palmar" },
-                { nome: "Músculo Oponent
-        ],
-            superior: [
-                { nome: "Bíceps Braquial", icone: "💪", origem: "Processo coracoide e tubérculo supraglenoidal", insercao: "Tuberosidade do rádio", funcao: "Flexão do cotovelo e supinação", inervacao: "Nervo musculocutâneo", irrigacao: "Artéria braquial" },
-                { nome: "Braquial", icone: "💪", origem: "Face anterior do úmero", insercao: "Tuberosidade ular", funcao: "Flexão do cotovelo", inervacao: "Nervo musculocutâneo", irrigacao: "Artéria braquial" },
-                { nome: "Braquiorradial", icone: "💪", origem: "Crista supracondilar lateral", insercao: "Processo estilóide do rádio", funcao: "Flexão do cotovelo", inervacao: "Nervo radial", irrigacao: "Artéria radial" },
-                { nome: "Tríceps Braquial", icone: "🦾", origem: "Tubérculo infraglenoidal e úmero", insercao: "Olécrano", funcao: "Extensão do cotovelo", inervacao: "Nervo radial", irrigacao: "Artéria braquial profunda" },
-                { nome: "Supinador", icone: "🔄", origem: "Epicôndilo lateral e ulna", insercao: "Rádio proximal", funcao: "Supinação do antebraço", inervacao: "Nervo radial", irrigacao: "Artéria radial" },
-                { nome: "Pronador Redondo", icone: "🔄", origem: "Epicôndilo medial e ulna", insercao: "Rádio", funcao: "Pronação e flexão do cotovelo", inervacao: "Nervo mediano", irrigacao: "Artéria ulnar" },
-                { nome: "Pronador Quadrado", icone: "⬜", origem: "Ulna distal", insercao: "Rádio distal", funcao: "Pronação do antebraço", inervacao: "Nervo mediano", irrigacao: "Artéria interóssea" },
-                { nome: "Flexor Superficial dos Dedos", icone: "🤌", origem: "Epicôndilo medial", insercao: "Falanges médias dos dedos 2-5", funcao: "Flexão dos dedos", inervacao: "Nervo mediano", irrigacao: "Artéria ulnar" },
-                { nome: "Flexor Profundo dos Dedos", icone: "🤌", origem: "Ulna e membrana interóssea", insercao: "Falanges distais dos dedos 2-5", funcao: "Flexão dos dedos", inervacao: "Mediano e ulnar", irrigacao: "Artéria interóssea" },
-                { nome: "Flexor Longo do Polegar", icone: "👍", origem: "Rádio e membrana interóssea", insercao: "Falange distal do polegar", funcao: "Flexão do polegar", inervacao: "Nervo mediano", irrigacao: "Artéria interóssea" },
-                { nome: "Extensor Comum dos Dedos", icone: "🖐️", origem: "Epicôndilo lateral", insercao: "Falanges dos dedos 2-5", funcao: "Extensão dos dedos", inervacao: "Nervo radial", irrigacao: "Artéria interóssea posterior" },
-                { nome: "Extensor Longo do Polegar", icone: "👍", origem: "Ulna e membrana interóssea", insercao: "Falange distal do polegar", funcao: "Extensão do polegar", inervacao: "Nervo radial", irrigacao: "Artéria interóssea posterior" },
-                { nome: "Extensor Curto do Polegar", icone: "👍", origem: "Rádio e membrana interóssea", insercao: "Falange proximal do polegar", funcao: "Extensão do polegar", inervacao: "Nervo radial", irrigacao: "Artéria interóssea posterior" },
-                { nome: "Abdutor Longo do Polegar", icone: "👐", origem: "Rádio, ulna e membrana interóssea", insercao: "1º metacarpo", funcao: "Abdução do polegar", inervacao: "Nervo radial", irrigacao: "Artéria interóssea posterior" },
-                { nome: "Abdutor Curto do Polegar", icone: "👐", origem: "Escafoide e trapézio", insercao: "Falange proximal do polegar", funcao: "Abdução do polegar", inervacao: "Nervo mediano", irrigacao: "Arco palmar" },
-                { nome: "Oponente do Polegar", icone: "🤝", origem: "Trapézio", insercao: "1º metacarpo", funcao: "Oposição do polegar", inervacao: "Nervo mediano", irrigacao: "Arco palmar" }
-            ],
-            inferior: [
-                { nome: "Iliopsoas", icone: "🏃", origem: "Fossa ilíaca e T12-L5", insercao: "Trocânter menor", funcao: "Flexão do quadril", inervacao: "Femoral e lombares", irrigacao: "Artérias ilíacas" },
-                { nome: "Reto Femoral", icone: "🦵", origem: "Espinha ilíaca anterior inferior", insercao: "Tuberosidade da tíbia", funcao: "Extensão do joelho", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Vasto Lateral", icone: "🦵", origem: "Trocânter maior e linha áspera", insercao: "Tuberosidade da tíbia", funcao: "Extensão do joelho", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Vasto Medial", icone: "🦵", origem: "Linha intertrocantérica", insercao: "Tuberosidade da tíbia", funcao: "Extensão do joelho", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Vasto Intermédio", icone: "🦵", origem: "Face anterior do fêmur", insercao: "Tuberosidade da tíbia", funcao: "Extensão do joelho", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Sartório", icone: "📏", origem: "Espinha ilíaca anterior superior", insercao: "Tuberosidade da tíbia", funcao: "Flexão e abdução do quadril", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Adutor Magno", icone: "🦵", origem: "Sínfise púbica e tuberosidade isquiática", insercao: "Linha áspera", funcao: "Adução do quadril", inervacao: "Obturador e ciático", irrigacao: "Artéria obturatriz" },
-                { nome: "Adutor Longo", icone: "🦵", origem: "Sínfise púbica", insercao: "Linha áspera", funcao: "Adução do quadril", inervacao: "Nervo obturador", irrigacao: "Artéria obturatriz" },
-                { nome: "Grácil", icone: "🦵", origem: "Sínfise púbica", insercao: "Tuberosidade da tíbia", funcao: "Adução do quadril", inervacao: "Nervo obturador", irrigacao: "Artéria obturatriz" },
-                { nome: "Pectíneo", icone: "🔷", origem: "Pecten do pubis", insercao: "Linha pectínea", funcao: "Adução do quadril", inervacao: "Nervo femoral", irrigacao: "Artéria femoral" },
-                { nome: "Tensor da Fáscia Lata", icone: "🎯", origem: "Espinha ilíaca anterior superior", insercao: "Trato iliotibial", funcao: "Tensão da fáscia lata", inervacao: "Nervo glúteo superior", irrigacao: "Artéria circunflexa ilíaca" },
-                { nome: "Glúteo Máximo", icone: "🍑", origem: "Fossa ilíaca posterior, sacro e cóccix", insercao: "Trato iliotibial", funcao: "Extensão do quadril", inervacao: "Nervo glúteo inferior", irrigacao: "Artérias glúteas" },
-                { nome: "Glúteo Médio", icone: "🍑", origem: "Fossa ilíaca externa", insercao: "Trocânter maior", funcao: "Abdução do quadril", inervacao: "Nervo glúteo superior", irrigacao: "Artéria glútea superior" },
-                { nome: "Glúteo Menor", icone: "🍑", origem: "Fossa ilíaca externa", insercao: "Trocânter maior", funcao: "Abdução do quadril", inervacao: "Nervo glúteo superior", irrigacao: "Artéria glútea superior" },
-                { nome: "Bíceps Femoral", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Cabeça da fíbula", funcao: "Extensão do quadril", inervacao: "Nervo ciático", irrigacao: "Artéria femoral profunda" },
-                { nome: "Semitendinoso", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Tuberosidade da tíbia", funcao: "Extensão do quadril", inervacao: "Nervo ciático", irrigacao: "Artéria femoral profunda" },
-                { nome: "Semimembranoso", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Côndilo medial da tíbia", funcao: "Extensão do quadril", inervacao: "Nervo ciático", irrigacao: "Artéria femoral profunda" },
-                { nome: "Poplíteo", icone: "🦵", origem: "Côndilo lateral do fêmur", insercao: "Tíbia posterior", funcao: "Flexão do joelho", inervacao: "Nervo tibial", irrigacao: "Artéria geniculada" },
-                { nome: "Tibial Anterior", icone: "🦶", origem: "Tíbia lateral", insercao: "1º metatarso", funcao: "Dorsiflexão do pé", inervacao: "Nervo fibular profundo", irrigacao: "Artéria tibial anterior" },
-                { nome: "Tibial Posterior", icone: "🦶", origem: "Tíbia, fibra e membrana interóssea", insercao: "Navicular e cuneiformes", funcao: "Inversão do pé", inervacao: "Nervo tibial", irrigacao: "Artéria tibial posterior" },
-                { nome: "Fibular Longo", icone: "🦶", origem: "Cabeça e fibra", insercao: "1º metatarso", funcao: "Eversão do pé", inervacao: "Nervo fibular superficial", irrigacao: "Artéria fibular" },
-                { nome: "Fibular Curto", icone: "🦶", origem: "Fibra", insercao: "5º metatarso", funcao: "Eversão do pé", inervacao: "Nervo fibular superficial", irrigacao: "Artéria fibular" },
-                { nome: "Gastrocnêmio", icone: "🦵", origem: "Côndilos do fêmur", insercao: "Calcâneo", funcao: "Flexão plantar", inervacao: "Nervo tibial", irrigacao: "Artérias surais" },
-                { nome: "Sóleo", icone: "🦵", origem: "Cabeça da fibra e tíbia", insercao: "Calcâneo", funcao: "Flexão plantar", inervacao: "Nervo tibial", irrigacao: "Artérias surais" },
-                { nome: "Extensor Longo dos Dedos", icone: "🦶", origem: "Tíbia e membrana interóssea", insercao: "Dedos 2-5", funcao: "Extensão dos dedos", inervacao: "Nervo fibular profundo", irrigacao: "Artéria tibial anterior" },
-                { nome: "Flexor Longo dos Dedos", icone: "🦶", origem: "Tíbia", insercao: "Dedos 2-5", funcao: "Flexão dos dedos", inervacao: "Nervo tibial", irrigacao: "Artéria tibial posterior" },
-                { nome: "Extensor Longo do Hálux", icone: "🦶", origem: "Fibra e membrana interóssea", insercao: "Hálux", funcao: "Extensão do hálux", inervacao: "Nervo fibular profundo", irrigacao: "Artéria tibial anterior" },
-                { nome: "Flexor Longo do Hálux", icone: "🦶", origem: "Fibra", insercao: "Hálux", funcao: "Flexão do hálux", inervacao: "Nervo tibial", irrigacao: "Artéria tibial posterior" }
-            ]
-                            { nome: "Músculo Corrugador do Supercílio", icone: "😠", origem: "Processo frontal do maxilar", insercao: "Pele da sobrancelha", funcao: "Aproxima as sobrancelhas (expressão de preocupação)", inervacao: "Nervo facial (VII)", irrigacao: "Artéria supratroclear" },
-                { nome: "Músculo Procer", icone: "🤨", origem: "Cartilagem nasal e osso nasal", insercao: "Pele da região glabela", funcao: "Forma rugas no nariz", inervacao: "Nervo facial (VII)", irrigacao: "Artéria angular" },
-                { nome: "Músculo Nasal", icone: "👃", origem: "Maxilar (processo frontal)", insercao: "Cartilagem nasal", funcao: "Abre as narinas", inervacao: "Nervo facial (VII)", irrigacao: "Artérias facial e angular" },
-                { nome: "Músculo Depressor do Septo Nasal", icone: "👃", origem: "Incisivo do maxilar", insercao: "Septo nasal", funcao: "Deprime o septo nasal", inervacao: "Nervo facial (VII)", irrigacao: "Artéria labial superior" },
-                { nome: "Músculo Elevador do Lábio Superior", icone: "😃", origem: "Processo zigomático e maxilar", insercao: "Lábio superior", funcao: "Eleva o lábio superior", inervacao: "Nervo facial (VII)", irrigacao: "Artéria infraorbital" },
-                { nome: "Músculo Zigomático Maior", icone: "😄", origem: "Arco zigomático", insercao: "Ângulo da boca", funcao: "Eleva o ângulo da boca (sorriso)", inervacao: "Nervo facial (VII)", irrigacao: "Artéria facial transversa" },
-                { nome: "Músculo Zigomático Menor", icone: "🙂", origem: "Arco zigomático", insercao: "Lábio superior", funcao: "Eleva o lábio superior", inervacao: "Nervo facial (VII)", irrigacao: "Artéria facial transversa" },
-                { nome: "Músculo Risorius", icone: "😬", origem: "Fáscia masseterica", insercao: "Ângulo da boca", funcao: "Retrai o ângulo da boca lateralmente", inervacao: "Nervo facial (VII)", irrigacao: "Artéria facial transversa" },
-                { nome: "Músculo Depressor do Lábio Inferior", icone: "😞", origem: "Mandíbula", insercao: "Lábio inferior", funcao: "Abaixa o lábio inferior", inervacao: "Nervo facial (VII)", irrigacao: "Artéria labial inferior" },
-                { nome: "Músculo Depressor do Ângulo da Boca", icone: "😟", origem: "Mandíbula", insercao: "Ângulo da boca", funcao: "Abaixa o ângulo da boca", inervacao: "Nervo facial (VII)", irrigacao: "Artéria facial" },
-                { nome: "Músculo Mental", icone: "😤", origem: "Mandíbula (fosa incisiva)", insercao: "Pele do queixo", funcao: "Eleva e projeta o lábio inferior", inervacao: "Nervo facial (VII)", irrigacao: "Artéria labial inferior" },
-                { nome: "Músculo Pterigoide Medial", icone: "🦷", origem: "Processo pterigoide da esfenóide", insercao: "Ângulo da mandíbula", funcao: "Eleva a mandíbula e movimentos laterais", inervacao: "Nervo mandibular (V3)", irrigacao: "Artéria pterigóidea" },
-                { nome: "Músculo Pterigoide Lateral", icone: "🦷", origem: "Asa maior da esfenóide", insercao: "Colo do côndilo da mandíbula", funcao: "Abre a boca e movimentos laterais", inervacao: "Nervo mandibular (V3)", irrigacao: "Artéria pterigóidea" },
-                { nome: "Músculo Tensor do Véu do Palato", icone: "🗣️", origem: "Esfenóide e cartilagem auditiva", insercao: "Aponeurose do palato", funcao: "Tensão do véu do palato", inervacao: "Nervo trigêmeo (V3)", irrigacao: "Artéria palatina menor" },
-                { nome: "Músculo Tensor do Tímpano", icone: "👂", origem: "Cartilagem auditiva", insercao: "Martelo (ossículo)", funcao: "Tensão do tímpano", inervacao: "Nervo trigêmeo (V3)", irrigacao: "Artéria timpânica" },
-                { nome: "Músculo Estapediano", icone: "👂", origem: "Parede posterior do tímpano", insercao: "Estribo (ossículo)", funcao: "Estabiliza a cadeia ossicular", inervacao: "Nervo facial (VII)", irrigacao: "Artéria timpânica" },
-                { nome: "Músculo Miloioideo", icone: "🦴", origem: "Fossa miloioidea da mandíbula", insercao: "Corpo hioide e linha miloioidea", funcao: "Eleva o assoalho da boca e abaixa a mandíbula", inervacao: "Nervo mandibular (V3)", irrigacao: "Artéria miloioidea" },
-                { nome: "Músculo Genioioideo", icone: "👅", origem: "Espinha mental da mandíbula", insercao: "Corpo hioide", funcao: "Eleva o assoalho da boca e projeta a língua", inervacao: "Hipoglosso (XII) e C1", irrigacao: "Artéria lingual" },
-                { nome: "Músculo Estiloglosso", icone: "👅", origem: "Processo estiloide", insercao: "Língua (borda lateral)", funcao: "Retrai e eleva a língua", inervacao: "Hipoglosso (XII)", irrigacao: "Artéria lingual" },
-                { nome: "Músculo Hioioideo", icone: "👅", origem: "Corpo hioide", insercao: "Língua", funcao: "Abaixa a língua", inervacao: "Hipoglosso (XII) e C1", irrigacao: "Artéria lingual" }
+                // ==================== BANCO DE DADOS - 100 MÚSCULOS ====================
+        const musclesDB = [
+            // CABEÇA - 20 músculos
+            { id: 1, nome: "Frontal", regiao: "cabeca", icone: "😊", origem: "Galea aponeurótica", insercao: "Pele supraorbital", acao: "Eleva sobrancelhas", inervacao: "Nervo facial (VII)" },
+            { id: 2, nome: "Occipital", regiao: "cabeca", icone: "🧠", origem: "Protuberância occipital", insercao: "Galea aponeurótica", acao: "Fixa couro cabeludo", inervacao: "Nervo occipital maior" },
+            { id: 3, nome: "Orbicular dos Olhos", regiao: "cabeca", icone: "👁️", origem: "Parede medial da órbita", insercao: "Pele das pálpebras", acao: "Fecha olhos", inervacao: "Nervo facial (VII)" },
+            { id: 4, nome: "Orbicular da Boca", regiao: "cabeca", icone: "👄", origem: "Maxila e mandíbula", insercao: "Lábios", acao: "Fecha boca", inervacao: "Nervo facial (VII)" },
+            { id: 5, nome: "Masseter", regiao: "cabeca", icone: "🦷", origem: "Arco zigomático", insercao: "Ângulo da mandíbula", acao: "Eleva mandíbula", inervacao: "Nervo mandibular (V3)" },
+            { id: 6, nome: "Temporal", regiao: "cabeca", icone: "⏱️", origem: "Fossa temporal", insercao: "Processo coronoide", acao: "Eleva e retrai mandíbula", inervacao: "Nervo mandibular (V3)" },
+            { id: 7, nome: "Corrugador do Supercílio", regiao: "cabeca", icone: "😠", origem: "Processo frontal do maxilar", insercao: "Sobrancelha", acao: "Aproxima sobrancelhas", inervacao: "Nervo facial (VII)" },
+            { id: 8, nome: "Procer", regiao: "cabeca", icone: "🤨", origem: "Cartilagem nasal", insercao: "Pele glabela", acao: "Forma rugas no nariz", inervacao: "Nervo facial (VII)" },
+            { id: 9, nome: "Nasal", regiao: "cabeca", icone: "👃", origem: "Maxilar (processo frontal)", insercao: "Cartilagem nasal", acao: "Abre narinas", inervacao: "Nervo facial (VII)" },
+            { id: 10, nome: "Zigomático Maior", regiao: "cabeca", icone: "😄", origem: "Arco zigomático", insercao: "Ângulo da boca", acao: "Sorriso", inervacao: "Nervo facial (VII)" },
+            { id: 11, nome: "Zigomático Menor", regiao: "cabeca", icone: "🙂", origem: "Arco zigomático", insercao: "Lábio superior", acao: "Eleva lábio superior", inervacao: "Nervo facial (VII)" },
+            { id: 12, nome: "Risorius", regiao: "cabeca", icone: "😬", origem: "Fáscia masseterica", insercao: "Ângulo da boca", acao: "Retrai ângulo da boca", inervacao: "Nervo facial (VII)" },
+            { id: 13, nome: "Buccinador", regiao: "cabeca", icone: "😙", origem: "Arco zigomático e mandíbula", insercao: "Ângulo da boca", acao: "Comprime bochechas", inervacao: "Nervo facial (VII)" },
+            { id: 14, nome: "Mental", regiao: "cabeca", icone: "😤", origem: "Fossa incisiva da mandíbula", insercao: "Pele do queixo", acao: "Protrai lábio inferior", inervacao: "Nervo facial (VII)" },
+            { id: 15, nome: "Pterigoide Medial", regiao: "cabeca", icone: "🦴", origem: "Processo pterigoide", insercao: "Ângulo da mandíbula", acao: "Eleva e lateraliza mandíbula", inervacao: "Nervo mandibular (V3)" },
+            { id: 16, nome: "Pterigoide Lateral", regiao: "cabeca", icone: "🦴", origem: "Asa maior da esfenóide", insercao: "Colo do côndilo", acao: "Abre e lateraliza mandíbula", inervacao: "Nervo mandibular (V3)" },
+            { id: 17, nome: "Miloioideo", regiao: "cabeca", icone: "👅", origem: "Fossa miloioidea", insercao: "Corpo hioide", acao: "Eleva assoalho da boca", inervacao: "Nervo mandibular (V3)" },
+            { id: 18, nome: "Genioioideo", regiao: "cabeca", icone: "👅", origem: "Espinha mental", insercao: "Corpo hioide", acao: "Eleva laringe", inervacao: "Hipoglosso (XII)" },
+            { id: 19, nome: "Estiloglosso", regiao: "cabeca", icone: "👅", origem: "Processo estiloide", insercao: "Lateral da língua", acao: "Retrai e eleva língua", inervacao: "Hipoglosso (XII)" },
+            { id: 20, nome: "Hioioideo", regiao: "cabeca", icone: "👅", origem: "Corpo hioide", insercao: "Língua", acao: "Abaixa língua", inervacao: "Hipoglosso (XII)" },
 
-        };
+            // PESCOÇO - 15 músculos
+            { id: 21, nome: "Esternocleidomastoideo", regiao: "pescoco", icone: "🦢", origem: "Esterno e clavícula", insercao: "Processo mastoide", acao: "Rotação e flexão da cabeça", inervacao: "Nervo acessório (XI)" },
+            { id: 22, nome: "Trapézio (superior)", regiao: "pescoco", icone: "🙆", origem: "Occipital e C7-T12", insercao: "Clavícula e escápula", acao: "Eleva escápula", inervacao: "Nervo acessório (XI)" },
+            { id: 23, nome: "Escaleno Anterior", regiao: "pescoco", icone: "🫁", origem: "C3-C6", insercao: "1ª costela", acao: "Eleva 1ª costela", inervacao: "C4-C6" },
+            { id: 24, nome: "Escaleno Médio", regiao: "pescoco", icone: "🫁", origem: "C2-C7", insercao: "1ª costela", acao: "Eleva 1ª costela", inervacao: "C3-C8" },
+            { id: 25, nome: "Escaleno Posterior", regiao: "pescoco", icone: "🫁", origem: "C5-C7", insercao: "2ª costela", acao: "Eleva 2ª costela", inervacao: "C6-C8" },
+            { id: 26, nome: "Platisma", regiao: "pescoco", icone: "😰", origem: "Fáscia peitoral", insercao: "Mandíbula", acao: "Tensão pele do pescoço", inervacao: "Nervo facial (VII)" },
+            { id: 27, nome: "Longo do Pescoço", regiao: "pescoco", icone: "🦒", origem: "T1-C5", insercao: "C2-C4", acao: "Flexão do pescoço", inervacao: "Nervos cervicais" },
+            { id: 28, nome: "Longíssimo do Pescoço", regiao: "pescoco", icone: "🦒", origem: "T1-T5", insercao: "Processo mastoide", acao: "Estende cabeça", inervacao: "Nervos cervicais" },
+            { id: 29, nome: "Esplênio da Cabeça", regiao: "pescoco", icone: "🦒", origem: "C7-T4", insercao: "Occipital e mastoide", acao: "Estende e rotaciona cabeça", inervacao: "Nervos cervicais" },
+            { id: 30, nome: "Semiespinhal da Cabeça", regiao: "pescoco", icone: "🦴", origem: "C4-T5", insercao: "Occipital", acao: "Estende cabeça", inervacao: "Nervos cervicais" },
+            { id: 31, nome: "Estiloioideo", regiao: "pescoco", icone: "🦴", origem: "Processo estiloide", insercao: "Corpo hioide", acao: "Eleva assoalho da boca", inervacao: "Nervo facial (VII)" },
+            { id: 32, nome: "Estilofaringeo", regiao: "pescoco", icone: "👄", origem: "Processo estiloide", insercao: "Parede faríngea", acao: "Eleva faringe", inervacao: "Glossofaringeo (IX)" },
+            { id: 33, nome: "Constrictor Superior da Faringe", regiao: "pescoco", icone: "👄", origem: "Lâmina medial da pterigoide", insercao: "Rafe faríngeo", acao: "Deglutição", inervacao: "Nervo vago (X)" },
+            { id: 34, nome: "Constrictor Médio da Faringe", regiao: "pescoco", icone: "👄", origem: "Cartilagens tireoide e cricoide", insercao: "Rafe faríngeo", acao: "Deglutição", inervacao: "Nervo vago (X)" },
+            { id: 35, nome: "Constrictor Inferior da Faringe", regiao: "pescoco", icone: "👄", origem: "Cartilagem cricoide", insercao: "Rafe faríngeo", acao: "Deglutição", inervacao: "Nervo vago (X)" },
+
+            // TRONCO - 20 músculos
+            { id: 36, nome: "Peitoral Maior", regiao: "tronco", icone: "💪", origem: "Clavícula, esterno, costelas 1-6", insercao: "Tubérculo maior do úmero", acao: "Adução e flexão do braço", inervacao: "Nervos peitorais" },
+            { id: 37, nome: "Peitoral Menor", regiao: "tronco", icone: "🦴", origem: "Costelas 3-5", insercao: "Processo coracoide", acao: "Deprime escápula", inervacao: "Nervo peitoral medial" },
+            { id: 38, nome: "Deltóide", regiao: "tronco", icone: "🎯", origem: "Clavícula, acrômio, espinha da escápula", insercao: "Tuberosidade deltoide", acao: "Abdução do braço", inervacao: "Nervo axilar" },
+            { id: 39, nome: "Reto Abdominal", regiao: "tronco", icone: "🏋️", origem: "Sínfise púbica", insercao: "Xifóide e costelas 5-7", acao: "Flexão do tronco", inervacao: "T7-T12" },
+            { id: 40, nome: "Oblíquo Externo", regiao: "tronco", icone: "🔄", origem: "8 últimas costelas", insercao: "Crista ilíaca e linha alba", acao: "Rotação e flexão do tronco", inervacao: "Nervos intercostais" },
+            { id: 41, nome: "Oblíquo Interno", regiao: "tronco", icone: "🔄", origem: "Fáscia toracolombar", insercao: "Costelas 10-12 e linha alba", acao: "Rotação e flexão do tronco", inervacao: "Nervos intercostais" },
+            { id: 42, nome: "Transverso do Abdome", regiao: "tronco", icone: "➡️", origem: "6 últimas costelas", insercao: "Linha alba", acao: "Compressão abdominal", inervacao: "T7-T12" },
+            { id: 43, nome: "Quadrado Lombar", regiao: "tronco", icone: "🔷", origem: "Crista ilíaca", insercao: "12ª costela e L1-L4", acao: "Flexão lateral do tronco", inervacao: "T12-L3" },
+            { id: 44, nome: "Eretor da Espinha", regiao: "tronco", icone: "🦴", origem: "Sacro e ilíaco", insercao: "Vértebras e costelas", acao: "Extensão da coluna", inervacao: "Nervos espinais" },
+            { id: 45, nome: "Rombóide Maior", regiao: "tronco", icone: "🔶", origem: "T2-T5", insercao: "Borda medial da escápula", acao: "Aduz escápula", inervacao: "Nervo dorsal da escápula" },
+            { id: 46, nome: "Rombóide Menor", regiao: "tronco", icone: "🔹", origem: "C7-T1", insercao: "Borda medial da escápula", acao: "Aduz escápula", inervacao: "Nervo dorsal da escápula" },
+            { id: 47, nome: "Latíssimo do Dorso", regiao: "tronco", icone: "🪽", origem: "T7-L5, sacro e ilíaco", insercao: "Sulco intertubercular", acao: "Extensão e adução do braço", inervacao: "Nervo toracodorsal" },
+            { id: 48, nome: "Levantador da Escápula", regiao: "tronco", icone: "⬆️", origem: "C1-C4", insercao: "Ângulo superior da escápula", acao: "Eleva escápula", inervacao: "C3-C4" },
+            { id: 49, nome: "Infraespinhal", regiao: "tronco", icone: "🦴", origem: "Fossa infraespinhal", insercao: "Tubérculo maior do úmero", acao: "Rotação lateral do braço", inervacao: "Nervo supraescapular" },
+            { id: 50, nome: "Supraespinhal", regiao: "tronco", icone: "🦴", origem: "Fossa supraespinhal", insercao: "Tubérculo maior do úmero", acao: "Abdução inicial do braço", inervacao: "Nervo supraescapular" },
+            { id: 51, nome: "Subescapular", regiao: "tronco", icone: "🦴", origem: "Fossa subescapular", insercao: "Tubérculo menor do úmero", acao: "Rotação medial do braço", inervacao: "Nervos subescapulares" },
+            { id: 52, nome: "Redondo Maior", regiao: "tronco", icone: "🔄", origem: "Borda inferior da escápula", insercao: "Sulco intertubercular", acao: "Extensão e rotação medial", inervacao: "Nervo subescapular inferior" },
+            { id: 53, nome: "Redondo Menor", regiao: "tronco", icone: "🔄", origem: "Borda lateral da escápula", insercao: "Tubérculo maior do úmero", acao: "Rotação lateral do braço", inervacao: "Nervo axilar" },
+            { id: 54, nome: "Diafragma", regiao: "tronco", icone: "🫁", origem: "Esterno, costelas e coluna", insercao: "Tendão central", acao: "Inspiração principal", inervacao: "Nervo frênico C3-C5" },
+            { id: 55, nome: "Intercostal Externo", regiao: "tronco", icone: "🫁", origem: "Borda inferior da costela", insercao: "Borda superior da costela abaixo", acao: "Eleva costelas (inspiração)", inervacao: "Nervos intercostais" },
+            { id: 56, nome: "Intercostal Interno", regiao: "tronco", icone: "🫁", origem: "Borda superior da costela", insercao: "Borda inferior da costela acima", acao: "Abaixa costelas (expiração)", inervacao: "Nervos intercostais" },
+
+            // MEMBROS SUPERIORES - 22 músculos
+            { id: 57, nome: "Bíceps Braquial", regiao: "superior", icone: "💪", origem: "Escápula (coracoide e supraglenoide)", insercao: "Tuberosidade do rádio", acao: "Flexão do cotovelo e supinação", inervacao: "Nervo musculocutâneo" },
+            { id: 58, nome: "Braquial", regiao: "superior", icone: "💪", origem: "Face anterior do úmero", insercao: "Ulna (tuberosidade)", acao: "Flexão do cotovelo", inervacao: "Nervo musculocutâneo" },
+            { id: 59, nome: "Braquiorradial", regiao: "superior", icone: "💪", origem: "Crista supracondilar lateral", insercao: "Processo estilóide do rádio", acao: "Flexão do cotovelo", inervacao: "Nervo radial" },
+            { id: 60, nome: "Tríceps Braquial", regiao: "superior", icone: "🦾", origem: "Escápula (infraglenoide) e úmero", insercao: "Olécrano da ulna", acao: "Extensão do cotovelo", inervacao: "Nervo radial" },
+            { id: 61, nome: "Supinador", regiao: "superior", icone: "🔄", origem: "Epicôndilo lateral e ulna", insercao: "Rádio proximal", acao: "Supinação do antebraço", inervacao: "Nervo radial" },
+            { id: 62, nome: "Pronador Redondo", regiao: "superior", icone: "🔄", origem: "Epicôndilo medial e ulna", insercao: "Rádio", acao: "Pronação e flexão do cotovelo", inervacao: "Nervo mediano" },
+            { id: 63, nome: "Pronador Quadrado", regiao: "superior", icone: "⬜", origem: "Ulna distal", insercao: "Rádio distal", acao: "Pronação do antebraço", inervacao: "Nervo mediano" },
+            { id: 64, nome: "Flexor Superficial dos Dedos", regiao: "superior", icone: "🤌", origem: "Epicôndilo medial", insercao: "Falanges médias dos dedos 2-5", acao: "Flexão dos dedos", inervacao: "Nervo mediano" },
+            { id: 65, nome: "Flexor Profundo dos Dedos", regiao: "superior", icone: "🤌", origem: "Ulna e membrana interóssea", insercao: "Falanges distais dos dedos 2-5", acao: "Flexão dos dedos", inervacao: "Mediano e ulnar" },
+            { id: 66, nome: "Flexor Longo do Polegar", regiao: "superior", icone: "👍", origem: "Rádio e membrana interóssea", insercao: "Falange distal do polegar", acao: "Flexão do polegar", inervacao: "Nervo mediano" },
+            { id: 67, nome: "Extensor Comum dos Dedos", regiao: "superior", icone: "🖐️", origem: "Epicôndilo lateral", insercao: "Falanges dos dedos 2-5", acao: "Extensão dos dedos", inervacao: "Nervo radial" },
+            { id: 68, nome: "Extensor Longo do Polegar", regiao: "superior", icone: "👍", origem: "Ulna e membrana interóssea", insercao: "Falange distal do polegar", acao: "Extensão do polegar", inervacao: "Nervo radial" },
+            { id: 69, nome: "Extensor Curto do Polegar", regiao: "superior", icone: "👍", origem: "Rádio e membrana interóssea", insercao: "Falange proximal do polegar", acao: "Extensão do polegar", inervacao: "Nervo radial" },
+            { id: 70, nome: "Abdutor Longo do Polegar", regiao: "superior", icone: "👐", origem: "Rádio, ulna e membrana interóssea", insercao: "1º metacarpo", acao: "Abdução do polegar", inervacao: "Nervo radial" },
+            { id: 71, nome: "Abdutor Curto do Polegar", regiao: "superior", icone: "👐", origem: "Escafoide e trapézio", insercao: "Falange proximal do polegar", acao: "Abdução do polegar", inervacao: "Nervo mediano" },
+            { id: 72, nome: "Oponente do Polegar", regiao: "superior", icone: "🤝", origem: "Trapézio", insercao: "1º metacarpo", acao: "Oposição do polegar", inervacao: "Nervo mediano" },
+            { id: 73, nome: "Lumbrical", regiao: "superior", icone: "🤌", origem: "Tendões do flexor profundo", insercao: "Tendões extensores", acao: "Flexão MCP e extensão IF", inervacao: "Mediano e ulnar" },
+            { id: 74, nome: "Interósseo Dorsal", regiao: "superior", icone: "✋", origem: "Faces adjacentes dos metacarpos", insercao: "Falanges proximais", acao: "Abdução dos dedos", inervacao: "Nervo ulnar" },
+            { id: 75, nome: "Interósseo Palmar", regiao: "superior", icone: "✋", origem: "Faces adjacentes dos metacarpos", insercao: "Falanges proximais", acao: "Adução dos dedos", inervacao: "Nervo ulnar" },
+            { id: 76, nome: "Abdutor do Mínimo", regiao: "superior", icone: "🤚", origem: "Pisiforme", insercao: "5º metacarpo", acao: "Abdução do mínimo", inervacao: "Nervo ulnar" },
+            { id: 77, nome: "Oponente do Mínimo", regiao: "superior", icone: "🤚", origem: "Hamato", insercao: "5º metacarpo", acao: "Oposição do mínimo", inervacao: "Nervo ulnar" },
+            { id: 78, nome: "Coracobraquial", regiao: "superior", icone: "💪", origem: "Processo coracoide", insercao: "Face medial do úmero", acao: "Flexão e adução do braço", inervacao: "Nervo musculocutâneo" },
+
+            // MEMBROS INFERIORES - 23 músculos
+            { id: 79, nome: "Iliopsoas", regiao: "inferior", icone: "🏃", origem: "Fossa ilíaca e T12-L5", insercao: "Trocânter menor", acao: "Flexão do quadril", inervacao: "Femoral e lombares" },
+            { id: 80, nome: "Reto Femoral", regiao: "inferior", icone: "🦵", origem: "Espinha ilíaca anterior inferior", insercao: "Tuberosidade da tíbia", acao: "Extensão do joelho e flexão do quadril", inervacao: "Nervo femoral" },
+            { id: 81, nome: "Vasto Lateral", regiao: "inferior", icone: "🦵", origem: "Trocânter maior e linha áspera", insercao: "Tuberosidade da tíbia", acao: "Extensão do joelho", inervacao: "Nervo femoral" },
+            { id: 82, nome: "Vasto Medial", regiao: "inferior", icone: "🦵", origem: "Linha intertrocantérica", insercao: "Tuberosidade da tíbia", acao: "Extensão do joelho", inervacao: "Nervo femoral" },
+            { id: 83, nome: "Vasto Intermédio", regiao: "inferior", icone: "🦵", origem: "Face anterior do fêmur", insercao: "Tuberosidade da tíbia", acao: "Extensão do joelho", inervacao: "Nervo femoral" },
+            { id: 84, nome: "Sartório", regiao: "inferior", icone: "📏", origem: "Espinha ilíaca anterior superior", insercao: "Tuberosidade da tíbia", acao: "Flexão, abdução e rotação lateral do quadril", inervacao: "Nervo femoral" },
+            { id: 85, nome: "Adutor Magno", regiao: "inferior", icone: "🦵", origem: "Sínfise púbica e tuberosidade isquiática", insercao: "Linha áspera", acao: "Adução do quadril", inervacao: "Obturador e ciático" },
+            { id: 86, nome: "Adutor Longo", regiao: "inferior", icone: "🦵", origem: "Sínfise púbica", insercao: "Linha áspera", acao: "Adução do quadril", inervacao: "Nervo obturador" },
+            { id: 87, nome: "Grácil", regiao: "inferior", icone: "🦵", origem: "Sínfise púbica", insercao: "Tuberosidade da tíbia", acao: "Adução do quadril e flexão do joelho", inervacao: "Nervo obturador" },
+            { id: 88, nome: "Pectíneo", regiao: "inferior", icone: "🔷", origem: "Pecten do pubis", insercao: "Linha pectínea", acao: "Adução e flexão do quadril", inervacao: "Nervo femoral" },
+            { id: 89, nome: "Tensor da Fáscia Lata", regiao: "inferior", icone: "🎯", origem: "Espinha ilíaca anterior superior", insercao: "Trato iliotibial", acao: "Tensão da fáscia lata", inervacao: "Nervo glúteo superior" },
+            { id: 90, nome: "Glúteo Máximo", regiao: "inferior", icone: "🍑", origem: "Fossa ilíaca posterior, sacro e cóccix", insercao: "Trato iliotibial", acao: "Extensão e rotação lateral do quadril", inervacao: "Nervo glúteo inferior" },
+            { id: 91, nome: "Glúteo Médio", regiao: "inferior", icone: "🍑", origem: "Fossa ilíaca externa", insercao: "Trocânter maior", acao: "Abdução do quadril", inervacao: "Nervo glúteo superior" },
+            { id: 92, nome: "Glúteo Menor", regiao: "inferior", icone: "🍑", origem: "Fossa ilíaca externa", insercao: "Trocânter maior", acao: "Abdução do quadril", inervacao: "Nervo glúteo superior" },
+            { id: 93, nome: "Bíceps Femoral", regiao: "inferior", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Cabeça da fíbula", acao: "Extensão do quadril e flexão do joelho", inervacao: "Nervo ciático" },
+            { id: 94, nome: "Semitendinoso", regiao: "inferior", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Tuberosidade da tíbia", acao: "Extensão do quadril e flexão do joelho", inervacao: "Nervo ciático" },
+            { id: 95, nome: "Semimembranoso", regiao: "inferior", icone: "🦵", origem: "Tuberosidade isquiática", insercao: "Côndilo medial da tíbia", acao: "Extensão do quadril e flexão do joelho", inervacao: "Nervo ciático" },
+            { id: 96, nome: "Poplíteo", regiao: "inferior", icone: "🦵", origem: "Côndilo lateral do fêmur", insercao: "Tíbia posterior", acao: "Flexão do joelho", inervacao: "Nervo tibial" },
+            { id: 97, nome: "Tibial Anterior", regiao: "inferior", icone: "🦶", origem: "Tíbia lateral", insercao: "1º metatarso", acao: "Dorsiflexão e inversão", inervacao: "Nervo fibular profundo" },
+            { id: 98, nome: "Tibial Posterior", regiao: "inferior", icone: "🦶", origem: "Tíbia, fibra e membrana interóssea", insercao: "Navicular e cuneiformes", acao: "Inversão do pé", inervacao: "Nervo tibial" },
+            { id: 99, nome: "Fibular Longo", regiao: "inferior", icone: "🦶", origem: "Cabeça e fibra", insercao: "1º metatarso", acao: "Eversão do pé", inervacao: "Nervo fibular superficial" },
+            { id: 100, nome: "Gastrocnêmio", regiao: "inferior", icone: "🦵", origem: "Côndilos do fêmur", insercao: "Calcâneo", acao: "Flexão plantar e flexão do joelho", inervacao: "Nervo tibial" }
+        ];
+
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let currentCard = 0;
+        let shuffledMuscles = [...musclesDB];
+        let quizQuestions = [];
+        let currentQuestion = 0;
+        let quizScore = 0;
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            showCard();
+            renderList('all');
+        });
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 15 + 's';
+                p.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(p);
+            }
+        }
         // ==================== NAVEGAÇÃO ====================
-        function showSection(sectionId) {
+        function showSection(section) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
             
-            document.getElementById(sectionId).classList.add('active');
+            document.getElementById(section).classList.add('active');
             event.target.classList.add('active');
             
-            if (sectionId === 'study') {
-                initStudyCards();
-            } else if (sectionId === 'search') {
-                searchMuscles();
-            } else if (sectionId === 'home') {
-                updateStats();
+            if (section === 'cards') showCard();
+            if (section === 'lista') renderList('all');
+        }
+
+        // ==================== FLASHCARDS ====================
+        function showCard() {
+            const m = shuffledMuscles[currentCard];
+            
+            document.getElementById('cardFront').innerHTML = `
+                <div class="muscle-icon">${m.icone}</div>
+                <div class="muscle-name">${m.nome}</div>
+                <div class="muscle-region">${getRegionName(m.regiao)}</div>
+                <div class="tap-hint">👆 Toque para virar</div>
+            `;
+            
+            document.getElementById('cardBack').innerHTML = `
+                <div style="width: 100%;">
+                    <h3 style="color: #0d1b2a; margin-bottom: 20px; font-size: 1.5em; text-align: center;">${m.nome}</h3>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">📍 Origem</div>
+                        <div class="detail-text">${m.origem}</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">🎯 Inserção</div>
+                        <div class="detail-text">${m.insercao}</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">⚡ Ação</div>
+                        <div class="detail-text">${m.acao}</div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <div class="detail-label">🧠 Inervação</div>
+                        <div class="detail-text">${m.inervacao}</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('counter').textContent = `${currentCard + 1}/${shuffledMuscles.length}`;
+            document.getElementById('btnPrev').disabled = currentCard === 0;
+            document.getElementById('btnNext').disabled = currentCard === shuffledMuscles.length - 1;
+            
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentCard < shuffledMuscles.length - 1) {
+                currentCard++;
+                document.getElementById('flashcard').classList.remove('flipped');
+                setTimeout(showCard, 300);
             }
         }
 
-        // ==================== QUIZ ====================
-        let quizQuestions = [];
-        let currentQuestionIndex = 0;
-        let quizScore = 0;
+        function prevCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                document.getElementById('flashcard').classList.remove('flipped');
+                setTimeout(showCard, 300);
+            }
+        }
 
+        function shuffleCards() {
+            shuffledMuscles = [...musclesDB].sort(() => Math.random() - 0.5);
+            currentCard = 0;
+            showCard();
+        }
+
+        function getRegionName(r) {
+            const names = { cabeca: 'Cabeça', pescoco: 'Pescoço', tronco: 'Tronco', superior: 'Membros Superiores', inferior: 'Membros Inferiores' };
+            return names[r] || r;
+        }
+
+        // ==================== QUIZ ====================
         function startQuiz() {
-            const allMuscles = [];
-            Object.keys(musclesDB).forEach(r => {
-                allMuscles.push(...musclesDB[r].map(m => ({...m, region: r})));
-            });
-            
             quizQuestions = [];
-            for (let i = 0; i < 10; i++) {
-                const correct = allMuscles[Math.floor(Math.random() * allMuscles.length)];
-                const questionType = Math.floor(Math.random() * 4);
-                let question, options, correctAnswer;
+            const used = new Set();
+            
+            while (quizQuestions.length < 10) {
+                const m = musclesDB[Math.floor(Math.random() * musclesDB.length)];
+                if (used.has(m.id)) continue;
+                used.add(m.id);
                 
-                switch(questionType) {
-                    case 0:
-                        question = `Qual a principal função do músculo ${correct.nome}?`;
-                        options = generateOptions(allMuscles, correct, 'funcao');
-                        correctAnswer = correct.funcao;
-                        break;
-                    case 1:
-                        question = `Qual o nervo que inerva o músculo ${correct.nome}?`;
-                        options = generateOptions(allMuscles, correct, 'inervacao');
-                        correctAnswer = correct.inervacao;
-                        break;
-                    case 2:
-                        question = `Qual a origem do músculo ${correct.nome}?`;
-                        options = generateOptions(allMuscles, correct, 'origem');
-                        correctAnswer = correct.origem;
-                        break;
-                    case 3:
-                        question = `Qual músculo tem como função: ${correct.funcao}?`;
-                        options = generateNameOptions(allMuscles, correct);
-                        correctAnswer = correct.nome;
-                        break;
+                const type = Math.floor(Math.random() * 3);
+                let q, options, correct;
+                
+                if (type === 0) {
+                    q = `Qual a principal ação do ${m.nome}?`;
+                    correct = m.acao;
+                    options = getRandomOptions(musclesDB, 'acao', correct);
+                } else if (type === 1) {
+                    q = `Qual o nervo que inerva o ${m.nome}?`;
+                    correct = m.inervacao;
+                    options = getRandomOptions(musclesDB, 'inervacao', correct);
+                } else {
+                    q = `Qual músculo tem como ação: ${m.acao}?`;
+                    correct = m.nome;
+                    options = getRandomNameOptions(musclesDB, correct);
                 }
                 
-                quizQuestions.push({question, options, correctAnswer});
+                quizQuestions.push({ q, options, correct });
             }
             
-            currentQuestionIndex = 0;
+            currentQuestion = 0;
             quizScore = 0;
             
             document.getElementById('quizStart').classList.add('hidden');
-            document.getElementById('quizContainer').classList.remove('hidden');
-            document.getElementById('resultContainer').classList.add('hidden');
+            document.getElementById('quizGame').classList.remove('hidden');
+            document.getElementById('quizEnd').classList.add('hidden');
             
             showQuestion();
         }
 
-        function generateOptions(allMuscles, correct, field) {
-            const options = [correct[field]];
-            while (options.length < 4) {
-                const random = allMuscles[Math.floor(Math.random() * allMuscles.length)];
-                if (!options.includes(random[field]) && random[field] !== correct[field]) {
-                    options.push(random[field]);
-                }
+        function getRandomOptions(arr, field, correct) {
+            const opts = [correct];
+            while (opts.length < 4) {
+                const r = arr[Math.floor(Math.random() * arr.length)];
+                if (!opts.includes(r[field])) opts.push(r[field]);
             }
-            return shuffle(options);
+            return opts.sort(() => Math.random() - 0.5);
         }
 
-        function generateNameOptions(allMuscles, correct) {
-            const options = [correct.nome];
-            while (options.length < 4) {
-                const random = allMuscles[Math.floor(Math.random() * allMuscles.length)];
-                if (!options.includes(random.nome) && random.nome !== correct.nome) {
-                    options.push(random.nome);
-                }
+        function getRandomNameOptions(arr, correct) {
+            const opts = [correct];
+            while (opts.length < 4) {
+                const r = arr[Math.floor(Math.random() * arr.length)];
+                if (!opts.includes(r.nome)) opts.push(r.nome);
             }
-            return shuffle(options);
-        }
-
-        function shuffle(array) {
-            return array.sort(() => Math.random() - 0.5);
+            return opts.sort(() => Math.random() - 0.5);
         }
 
         function showQuestion() {
-            const q = quizQuestions[currentQuestionIndex];
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-            document.getElementById('totalQuestions').textContent = quizQuestions.length;
-            document.getElementById('progressFill').style.width = ((currentQuestionIndex + 1) / quizQuestions.length * 100) + '%';
-            document.getElementById('questionText').textContent = q.question;
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('qNum').textContent = currentQuestion + 1;
+            document.getElementById('quizProgress').style.width = ((currentQuestion + 1) / 10 * 100) + '%';
+            document.getElementById('qText').textContent = q.q;
             
-            const container = document.getElementById('optionsContainer');
+            const container = document.getElementById('qOptions');
             container.innerHTML = '';
             
             q.options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'quiz-option';
                 btn.textContent = opt;
-                btn.onclick = () => checkAnswer(btn, opt, q.correctAnswer);
+                btn.onclick = () => checkAnswer(btn, opt, q.correct);
                 container.appendChild(btn);
             });
         }
 
         function checkAnswer(btn, selected, correct) {
-            const allBtns = document.querySelectorAll('.quiz-option');
-            allBtns.forEach(b => b.disabled = true);
+            const all = document.querySelectorAll('.quiz-option');
+            all.forEach(b => b.disabled = true);
             
             if (selected === correct) {
                 btn.classList.add('correct');
                 quizScore++;
             } else {
                 btn.classList.add('wrong');
-                allBtns.forEach(b => {
-                    if (b.textContent === correct) b.classList.add('correct');
-                });
+                all.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
             }
             
             setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < quizQuestions.length) {
-                    showQuestion();
-                } else {
-                    showResults();
-                }
+                currentQuestion++;
+                if (currentQuestion < 10) showQuestion();
+                else showResults();
             }, 1500);
         }
 
         function showResults() {
-            document.getElementById('quizContainer').classList.add('hidden');
-            document.getElementById('resultContainer').classList.remove('hidden');
+            document.getElementById('quizGame').classList.add('hidden');
+            document.getElementById('quizEnd').classList.remove('hidden');
+            document.getElementById('finalScore').textContent = `${quizScore}/10`;
             
-            const percentage = (quizScore / quizQuestions.length) * 100;
-            document.getElementById('scoreValue').textContent = quizScore;
-            document.getElementById('totalScore').textContent = quizQuestions.length;
-            document.getElementById('scoreMessage').textContent = getScoreMessage(percentage);
-            
-            saveQuizHistory(quizScore, quizQuestions.length);
+            const msgs = [
+                { min: 9, msg: "🏆 Excelente! Você domina a anatomia!" },
+                { min: 7, msg: "👏 Muito bom! Conhecimento sólido!" },
+                { min: 5, msg: "👍 Bom! Continue praticando!" },
+                { min: 0, msg: "📚 Continue estudando! Você consegue!" }
+            ];
+            document.getElementById('scoreMsg').textContent = msgs.find(m => quizScore >= m.min).msg;
         }
 
-        function getScoreMessage(percentage) {
-            if (percentage >= 90) return "🏆 Excelente! Você é um expert em anatomia!";
-            if (percentage >= 70) return "👏 Muito bom! Você conhece bem a anatomia!";
-            if (percentage >= 50) return "👍 Bom! Continue estudando!";
-            return "📚 Continue praticando! A anatomia requer estudo constante.";
+        function resetQuiz() {
+            document.getElementById('quizEnd').classList.add('hidden');
+            document.getElementById('quizStart').classList.remove('hidden');
         }
 
-        function saveQuizHistory(score, total) {
-            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
-            history.push({
-                date: new Date().toLocaleDateString('pt-BR'),
-                score: score,
-                total: total,
-                percentage: Math.round((score/total)*100)
-            });
-            localStorage.setItem('quizHistory', JSON.stringify(history.slice(-10)));
-        }
-
-        function showQuizHistory() {
-            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
-            const container = document.getElementById('quizHistory');
+        // ==================== LISTA DE MÚSCULOS ====================
+        function renderList(filter) {
+            const container = document.getElementById('musclesList');
+            const filtered = filter === 'all' ? musclesDB : musclesDB.filter(m => m.regiao === filter);
             
-            if (history.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #7f8c8d;">Nenhum quiz realizado ainda.</p>';
-            } else {
-                container.innerHTML = history.reverse().map(h => `
-                    <div style="background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid ${h.percentage >= 70 ? '#27ae60' : '#c0392b'}; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 600; color: #2c3e50;">${h.date}</span>
-                            <span style="font-size: 1.2em; font-weight: bold; color: ${h.percentage >= 70 ? '#27ae60' : '#c0392b'};">
-                                ${h.score}/${h.total} (${h.percentage}%)
-                            </span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            document.getElementById('historyModal').classList.add('active');
-        }
-        // ==================== CARDS DE ESTUDO ====================
-        let currentCardIndex = 0;
-        let studyCards = [];
-
-        function initStudyCards() {
-            studyCards = [];
-            Object.keys(musclesDB).forEach(region => {
-                musclesDB[region].forEach(muscle => {
-                    studyCards.push({...muscle, region});
-                });
-            });
-            
-            studyCards = shuffle([...studyCards]);
-            currentCardIndex = 0;
-            
-            if (studyCards.length > 0) {
-                showCard();
-            }
-        }
-
-        function showCard() {
-            const card = studyCards[currentCardIndex];
-            
-            document.getElementById('cardFront').innerHTML = `
-                <div style="font-size: 3em; margin-bottom: 15px;">${card.icone}</div>
-                <h3 style="color: #1e3a5f; margin-bottom: 10px; font-size: 1.5em;">${card.nome}</h3>
-                <span style="background: #d4af37; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em;">
-                    ${getRegionName(card.region)}
-                </span>
-                <p style="margin-top: 20px; color: #7f8c8d; font-size: 0.9em;">Toque para ver detalhes</p>
-            `;
-            
-            document.getElementById('cardBack').innerHTML = `
-                <h4 style="color: #1e3a5f; margin-bottom: 15px; border-bottom: 2px solid #d4af37; padding-bottom: 10px;">
-                    ${card.nome}
-                </h4>
-                <div style="text-align: left; font-size: 0.9em;">
-                    <p style="margin-bottom: 8px;"><strong style="color: #1e3a5f;">📍 Origem:</strong> ${card.origem}</p>
-                    <p style="margin-bottom: 8px;"><strong style="color: #1e3a5f;">🎯 Inserção:</strong> ${card.insercao}</p>
-                    <p style="margin-bottom: 8px;"><strong style="color: #1e3a5f;">⚡ Ação:</strong> ${card.funcao}</p>
-                    <p style="margin-bottom: 8px;"><strong style="color: #1e3a5f;">🧠 Inervação:</strong> ${card.inervacao}</p>
-                    <p><strong style="color: #1e3a5f;">💪 Irrigação:</strong> ${card.irrigacao}</p>
-                </div>
-            `;
-            
-            document.getElementById('cardCounter').textContent = `${currentCardIndex + 1} / ${studyCards.length}`;
-            document.getElementById('prevCard').disabled = currentCardIndex === 0;
-            document.getElementById('nextCard').disabled = currentCardIndex === studyCards.length - 1;
-        }
-
-        function flipCard() {
-            document.getElementById('studyCard').classList.toggle('flipped');
-        }
-
-        function nextCard() {
-            if (currentCardIndex < studyCards.length - 1) {
-                document.getElementById('studyCard').classList.remove('flipped');
-                setTimeout(() => {
-                    currentCardIndex++;
-                    showCard();
-                }, 300);
-            }
-        }
-
-        function prevCard() {
-            if (currentCardIndex > 0) {
-                document.getElementById('studyCard').classList.remove('flipped');
-                setTimeout(() => {
-                    currentCardIndex--;
-                    showCard();
-                }, 300);
-            }
-        }
-
-        function shuffleCards() {
-            studyCards = shuffle([...studyCards]);
-            currentCardIndex = 0;
-            document.getElementById('studyCard').classList.remove('flipped');
-            setTimeout(showCard, 300);
-        }
-        // ==================== BUSCA ====================
-        function searchMuscles() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const regionFilter = document.getElementById('regionFilter').value;
-            const actionFilter = document.getElementById('actionFilter').value;
-            
-            const results = [];
-            
-            Object.keys(musclesDB).forEach(region => {
-                if (regionFilter && region !== regionFilter) return;
-                
-                musclesDB[region].forEach(muscle => {
-                    const matchesSearch = !searchTerm || 
-                        muscle.nome.toLowerCase().includes(searchTerm) ||
-                        muscle.funcao.toLowerCase().includes(searchTerm) ||
-                        muscle.origem.toLowerCase().includes(searchTerm);
-                    
-                    const matchesAction = !actionFilter || muscle.funcao.toLowerCase().includes(actionFilter);
-                    
-                    if (matchesSearch && matchesAction) {
-                        results.push({...muscle, region});
-                    }
-                });
-            });
-            
-            displaySearchResults(results);
-        }
-
-        function displaySearchResults(results) {
-            const container = document.getElementById('searchResults');
-            
-            if (results.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #7f8c8d; grid-column: 1/-1;">
-                        <div style="font-size: 3em; margin-bottom: 15px;">🔍</div>
-                        <p>Nenhum músculo encontrado.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = results.map(m => `
-                <div class="muscle-card" onclick="showMuscleDetail('${m.region}', '${m.nome}')" style="cursor: pointer;">
-                    <div class="muscle-icon">${m.icone}</div>
-                    <h4 style="color: #1e3a5f; margin-bottom: 5px;">${m.nome}</h4>
-                    <p style="color: #7f8c8d; font-size: 0.9em; margin-bottom: 10px;">${m.funcao}</p>
-                    <span style="background: #ecf0f1; padding: 3px 10px; border-radius: 10px; font-size: 0.8em; color: #2c3e50;">
-                        ${getRegionName(m.region)}
-                    </span>
+            container.innerHTML = filtered.map(m => `
+                <div class="mini-card" onclick="showDetail(${m.id})">
+                    <div class="mini-icon">${m.icone}</div>
+                    <div class="mini-name">${m.nome}</div>
+                    <div class="mini-region">${getRegionName(m.regiao)}</div>
                 </div>
             `).join('');
         }
 
-        function showMuscleDetail(region, muscleName) {
-            const muscle = musclesDB[region].find(m => m.nome === muscleName);
-            if (!muscle) return;
-            
-            document.getElementById('detailContent').innerHTML = `
+        function filterMuscles(region) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderList(region);
+        }
+
+        function showDetail(id) {
+            const m = musclesDB.find(x => x.id === id);
+            document.getElementById('modalTitle').textContent = m.nome;
+            document.getElementById('modalBody').innerHTML = `
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 4em; margin-bottom: 10px;">${muscle.icone}</div>
-                    <h2 style="color: #1e3a5f; margin-bottom: 5px;">${muscle.nome}</h2>
-                    <span style="background: #d4af37; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9em;">
-                        ${getRegionName(region)}
-                    </span>
+                    <div style="font-size: 4em;">${m.icone}</div>
+                    <div style="color: #d4af37; font-size: 1.2em;">${getRegionName(m.regiao)}</div>
                 </div>
-                <div style="display: grid; gap: 15px;">
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #1e3a5f;">
-                        <h4 style="color: #1e3a5f; margin-bottom: 5px;">📍 Origem</h4>
-                        <p style="margin: 0; color: #2c3e50;">${muscle.origem}</p>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #d4af37;">
-                        <h4 style="color: #1e3a5f; margin-bottom: 5px;">🎯 Inserção</h4>
-                        <p style="margin: 0; color: #2c3e50;">${muscle.insercao}</p>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #27ae60;">
-                        <h4 style="color: #1e3a5f; margin-bottom: 5px;">⚡ Ação</h4>
-                        <p style="margin: 0; color: #2c3e50;">${muscle.funcao}</p>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #e74c3c;">
-                        <h4 style="color: #1e3a5f; margin-bottom: 5px;">🧠 Inervação</h4>
-                        <p style="margin: 0; color: #2c3e50;">${muscle.inervacao}</p>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid #9b59b6;">
-                        <h4 style="color: #1e3a5f; margin-bottom: 5px;">💪 Irrigação</h4>
-                        <p style="margin: 0; color: #2c3e50;">${muscle.irrigacao}</p>
-                    </div>
-                </div>
+                <div class="detail-row"><h4>📍 Origem</h4><p>${m.origem}</p></div>
+                <div class="detail-row"><h4>🎯 Inserção</h4><p>${m.insercao}</p></div>
+                <div class="detail-row"><h4>⚡ Ação</h4><p>${m.acao}</p></div>
+                <div class="detail-row"><h4>🧠 Inervação</h4><p>${m.inervacao}</p></div>
             `;
-            
-            document.getElementById('muscleModal').classList.add('active');
+            document.getElementById('detailModal').classList.add('active');
         }
 
-        function getRegionName(region) {
-            const names = {
-                'cabeca': 'Cabeça',
-                'pescoco': 'Pescoço',
-                'tronco': 'Tronco',
-                'superior': 'Membros Superiores',
-                'inferior': 'Membros Inferiores'
-            };
-            return names[region] || region;
+        function closeModal() {
+            document.getElementById('detailModal').classList.remove('active');
         }
 
-        function updateStats() {
-            let total = 0;
-            Object.values(musclesDB).forEach(arr => total += arr.length);
-            document.getElementById('totalMuscles').textContent = total;
-            
-            const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
-            if (history.length > 0) {
-                const avg = history.reduce((acc, h) => acc + h.percentage, 0) / history.length;
-                document.getElementById('avgScore').textContent = Math.round(avg) + '%';
-            }
+        function closeModalOutside(e) {
+            if (e.target.id === 'detailModal') closeModal();
         }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function closeModalOnClick(event, modalId) {
-            if (event.target.id === modalId) {
-                closeModal(modalId);
-            }
-        }
-
-        // ==================== INICIALIZAÇÃO ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('searchInput').addEventListener('input', searchMuscles);
-            document.getElementById('regionFilter').addEventListener('change', searchMuscles);
-            document.getElementById('actionFilter').addEventListener('change', searchMuscles);
-            updateStats();
-            searchMuscles();
-        });
     </script>
 </body>
 </html>
-
 
