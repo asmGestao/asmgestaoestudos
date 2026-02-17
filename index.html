@@ -38,7 +38,7 @@
       margin: 0 auto 20px;
       font-weight: 800;
       color: #0b2c47;
-      font-size: 28px;
+      font-size: 32px;
       letter-spacing: 1px;
     }
 
@@ -70,15 +70,32 @@
       font-size: 14px;
       color: #324a5f;
       text-align: left;
-      margin-bottom: 20px;
+      margin-bottom: 26px;
     }
 
-    .password-box {
-      display: none;
+    .btn {
+      display: block;
+      width: 240px;
+      margin: 0 auto;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0b2c47, #0e3b5c);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: 0 12px 22px rgba(11,44,71,0.35);
+      cursor: pointer;
+      border: none;
+    }
+
+    .senha-box {
       margin-top: 20px;
+      display: none;
     }
 
-    input {
+    .senha-box input {
       width: 100%;
       padding: 14px;
       border-radius: 14px;
@@ -87,37 +104,18 @@
       margin-bottom: 12px;
     }
 
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #0b2c47, #0e3b5c);
-      color: #ffffff;
-      font-size: 16px;
-      font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 12px 22px rgba(11,44,71,0.35);
-      transition: 0.2s;
-      border: none;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      opacity: 0.95;
-    }
-
-    .error {
+    .erro {
       color: #c62828;
       font-size: 14px;
-      margin-top: 10px;
+      margin-top: 8px;
       display: none;
     }
 
     footer {
-      margin-top: 22px;
+      margin-top: 26px;
       font-size: 12px;
       color: #8fa1ad;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -137,38 +135,42 @@
     </div>
 
     <div class="info">
-      📌 Conteúdo exclusivo. Acesso liberado apenas para alunos autorizados.
+      📌 Estrutura clara por músculos e regiões do corpo, com foco em aplicação prática,
+      raciocínio clínico e correlação funcional.
     </div>
 
-    <button class="btn" onclick="mostrarSenha()">
-      Entrar no Atlas
-    </button>
+    <button class="btn" onclick="mostrarSenha()">Entrar no Atlas</button>
 
-    <div class="password-box" id="passwordBox">
+    <div class="senha-box" id="senhaBox">
       <input type="password" id="senha" placeholder="Digite a senha de acesso">
       <button class="btn" onclick="verificarSenha()">Acessar</button>
-      <div class="error" id="erro">Senha incorreta</div>
+      <div class="erro" id="erro">Senha incorreta</div>
     </div>
 
     <footer>
-      Atlas de Anatomia Funcional © Uso educacional
+      Desenvolvido por <strong>Dra. Andresa Augusto</strong><br>
+      © Todos os direitos reservados.<br>
+      É proibida a reprodução, distribuição ou uso deste material, total ou parcial,
+      sem autorização expressa da autora.
     </footer>
 
   </div>
 
   <script>
-    const SENHA_CORRETA = "asm123"; // <<< TROQUE A SENHA AQUI
+    const SENHA_CORRETA = "ASM123";
 
     function mostrarSenha() {
-      document.getElementById("passwordBox").style.display = "block";
+      document.getElementById("senhaBox").style.display = "block";
     }
 
     function verificarSenha() {
       const senha = document.getElementById("senha").value;
+      const erro = document.getElementById("erro");
+
       if (senha === SENHA_CORRETA) {
         window.location.href = "atlas.html";
       } else {
-        document.getElementById("erro").style.display = "block";
+        erro.style.display = "block";
       }
     }
   </script>
