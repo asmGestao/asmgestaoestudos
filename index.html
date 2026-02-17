@@ -38,7 +38,7 @@
       margin: 0 auto 20px;
       font-weight: 800;
       color: #0b2c47;
-      font-size: 32px;
+      font-size: 28px;
       letter-spacing: 1px;
     }
 
@@ -70,7 +70,21 @@
       font-size: 14px;
       color: #324a5f;
       text-align: left;
-      margin-bottom: 26px;
+      margin-bottom: 20px;
+    }
+
+    .password-box {
+      display: none;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      margin-bottom: 12px;
     }
 
     .btn {
@@ -85,10 +99,19 @@
       text-decoration: none;
       box-shadow: 0 12px 22px rgba(11,44,71,0.35);
       transition: 0.2s;
+      border: none;
+      cursor: pointer;
     }
 
     .btn:hover {
       opacity: 0.95;
+    }
+
+    .error {
+      color: #c62828;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
     }
 
     footer {
@@ -114,19 +137,41 @@
     </div>
 
     <div class="info">
-      📌 Estrutura clara por músculos e regiões do corpo, com foco em aplicação prática,
-      raciocínio clínico e correlação funcional.
+      📌 Conteúdo exclusivo. Acesso liberado apenas para alunos autorizados.
     </div>
 
-    <a href="atlas.html" class="btn">
+    <button class="btn" onclick="mostrarSenha()">
       Entrar no Atlas
-    </a>
+    </button>
+
+    <div class="password-box" id="passwordBox">
+      <input type="password" id="senha" placeholder="Digite a senha de acesso">
+      <button class="btn" onclick="verificarSenha()">Acessar</button>
+      <div class="error" id="erro">Senha incorreta</div>
+    </div>
 
     <footer>
       Atlas de Anatomia Funcional © Uso educacional
     </footer>
 
   </div>
+
+  <script>
+    const SENHA_CORRETA = "asm123"; // <<< TROQUE A SENHA AQUI
+
+    function mostrarSenha() {
+      document.getElementById("passwordBox").style.display = "block";
+    }
+
+    function verificarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === SENHA_CORRETA) {
+        window.location.href = "atlas.html";
+      } else {
+        document.getElementById("erro").style.display = "block";
+      }
+    }
+  </script>
 
 </body>
 </html>
