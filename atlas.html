@@ -1,184 +1,786 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASM Gestão Atlas – Dra. Andresa Augusto</title>
-
-<style>
-body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-    background:linear-gradient(135deg,#0d1b2a,#1b263b,#415a77);
-    color:#e0e1dd;
-}
-header{
-    text-align:center;
-    padding:40px 20px;
-}
-h1{
-    color:#d4af37;
-    font-size:2.4em;
-}
-.subtitle{color:#778da9}
-.menu{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-bottom:30px;
-}
-.menu button{
-    background:#1b263b;
-    color:#d4af37;
-    border:2px solid #d4af37;
-    padding:12px 24px;
-    border-radius:30px;
-    cursor:pointer;
-}
-.menu button.active{
-    background:#d4af37;
-    color:#0d1b2a;
-}
-.section{display:none;padding:20px}
-.section.active{display:block}
-
-/* FLASHCARD */
-.card{
-    max-width:420px;
-    margin:0 auto;
-    background:#1b263b;
-    border-radius:20px;
-    padding:30px;
-    text-align:center;
-    border:2px solid #d4af37;
-}
-.card h2{color:#d4af37}
-.card p{margin:8px 0}
-
-/* LISTA */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:15px;
-}
-.item{
-    background:#1b263b;
-    padding:20px;
-    border-radius:15px;
-    border:1px solid #d4af37;
-    cursor:pointer;
-}
-.item h4{color:#d4af37;margin:0}
-
-/* CONTROLES */
-.controls{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    margin-top:20px;
-}
-.controls button{
-    padding:10px 18px;
-    border-radius:20px;
-    border:none;
-    background:#d4af37;
-    font-weight:bold;
-    cursor:pointer;
-}
-.counter{
-    text-align:center;
-    margin-top:10px;
-    color:#d4af37;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASM Atlas Muscular - Dra Andresa Augusto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            color: #1a237e;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(26, 35, 126, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            color: #ffd700;
+        }
+        
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .nav-btn {
+            background: white;
+            border: 2px solid #1a237e;
+            color: #1a237e;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: #1a237e;
+            color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #1a237e;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #ffd700;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .muscle-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .muscle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(26, 35, 126, 0.2);
+            border-color: #ffd700;
+        }
+        
+        .muscle-card h3 {
+            color: #1a237e;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .muscle-info {
+            margin-bottom: 10px;
+        }
+        
+        .muscle-info strong {
+            color: #1a237e;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        
+        .muscle-info span {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-header h2 {
+            color: #1a237e;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #ffd700, #ffb300);
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .question {
+            font-size: 1.2em;
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+        
+        .option:hover {
+            background: #e8eaf6;
+            border-color: #1a237e;
+        }
+        
+        .option.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .option.wrong {
+            background: #ffcdd2;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        
+        .option.disabled {
+            pointer-events: none;
+        }
+        
+        .quiz-btn {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .quiz-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(26, 35, 126, 0.4);
+        }
+        
+        .result {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .result h2 {
+            color: #1a237e;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .score {
+            font-size: 3em;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .feedback {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        .start-quiz-btn {
+            background: linear-gradient(135deg, #ffd700, #ffb300);
+            color: #1a237e;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .start-quiz-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .explanation {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-btn {
+                padding: 10px 15px;
+                font-size: 0.8em;
+            }
+            
+            .header h1 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-<header>
-    <h1>ASM GESTÃO ATLAS</h1>
-    <div class="subtitle">100 músculos – Origem, Inserção, Ação e Inervação</div>
-    <div class="subtitle">Dra. Andresa Augusto</div>
-</header>
-
-<div class="menu">
-    <button class="active" onclick="showSection('flash')">Flashcards</button>
-    <button onclick="showSection('lista')">Lista</button>
-</div>
-
-<!-- FLASHCARD -->
-<section id="flash" class="section active">
-    <div class="card">
-        <h2 id="nome"></h2>
-        <p><b>Região:</b> <span id="regiao"></span></p>
-        <p><b>Origem:</b> <span id="origem"></span></p>
-        <p><b>Inserção:</b> <span id="insercao"></span></p>
-        <p><b>Ação:</b> <span id="acao"></span></p>
-        <p><b>Inervação:</b> <span id="inervacao"></span></p>
+    <div class="header">
+        <h1>🏥 ASM Fisioterapia</h1>
+        <p>Atlas Muscular Completo - Dra Andresa Augusto</p>
+    </div>
+    
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="showSection('pescoco')">PESCOÇO (15)</button>
+            <button class="nav-btn" onclick="showSection('superiores')">MEMBROS SUPERIORES (30)</button>
+            <button class="nav-btn" onclick="showSection('tronco')">TRONCO DORSAL/POSTERIOR (25)</button>
+            <button class="nav-btn" onclick="showSection('inferiores')">MEMBROS INFERIORES (30)</button>
+            <button class="nav-btn" onclick="showSection('quiz')">🎯 QUIZ (20 Questões)</button>
+        </div>
+        
+        <!-- PESCOÇO -->
+        <div id="pescoco" class="section active">
+            <div class="section-title">🦴 Músculos do PESCOÇO (15 músculos)</div>
+            <div class="cards-grid" id="pescoco-grid"></div>
+        </div>
+        
+        <!-- MEMBROS SUPERIORES -->
+        <div id="superiores" class="section">
+            <div class="section-title">💪 Músculos dos MEMBROS SUPERIORES (30 músculos)</div>
+            <div class="cards-grid" id="superiores-grid"></div>
+        </div>
+        
+        <!-- TRONCO -->
+        <div id="tronco" class="section">
+            <div class="section-title">🫁 Músculos do TRONCO DORSAL E POSTERIOR (25 músculos)</div>
+            <div class="cards-grid" id="tronco-grid"></div>
+        </div>
+        
+        <!-- MEMBROS INFERIORES -->
+        <div id="inferiores" class="section">
+            <div class="section-title">🦵 Músculos dos MEMBROS INFERIORES (30 músculos)</div>
+            <div class="cards-grid" id="inferiores-grid"></div>
+        </div>
+        
+        <!-- QUIZ -->
+        <div id="quiz" class="section">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h2>🧠 Quiz de Anatomia Muscular</h2>
+                    <p>Teste seus conhecimentos com 20 questões!</p>
+                </div>
+                
+                <div id="quiz-start">
+                    <div style="text-align: center; padding: 40px;">
+                        <p style="font-size: 1.2em; color: #555; margin-bottom: 30px;">
+                            Prepare-se para testar seus conhecimentos sobre os 100 principais músculos do corpo humano!
+                        </p>
+                        <button class="start-quiz-btn" onclick="startQuiz()">▶ INICIAR QUIZ</button>
+                    </div>
+                </div>
+                
+                <div id="quiz-questions" class="hidden">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress" style="width: 0%"></div>
+                    </div>
+                    <div id="question-container"></div>
+                </div>
+                
+                <div id="quiz-result" class="hidden">
+                    <div class="result">
+                        <h2>🎉 Quiz Finalizado!</h2>
+                        <div class="score" id="final-score">0/20</div>
+                        <div class="feedback" id="feedback"></div>
+                        <button class="quiz-btn" onclick="restartQuiz()">🔄 Refazer Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="controls">
-        <button onclick="prev()">◀</button>
-        <button onclick="next()">▶</button>
-    </div>
-    <div class="counter" id="contador"></div>
-</section>
+    <script>
+        // DADOS DOS MÚSCULOS - 100 MÚSCULOS ORGANIZADOS
+        const muscles = {
+            pescoco: [
+                {name: "Esternocleidomastoideo", origin: "Manúbrio esternal e clavícula", insertion: "Processo mastoide e linha nucal superior", innervation: "N. Acessório (XI)", action: "Rotação contralateral da cabeça, flexão cervical"},
+                {name: "Trapézio (porção superior)", origin: "Protuberância occipital externa e ligamento nucal", insertion: "Clavícula lateral", innervation: "N. Acessório (XI)", action: "Elevação da escápula, extensão da cabeça"},
+                {name: "Escaleno Anterior", origin: "Processos transversos de C3-C6", insertion: "Tubérculo do escápulo", innervation: "Plexo cervical (C4-C6)", action: "Elevação da 1ª costela, flexão lateral do pescoço"},
+                {name: "Escaleno Médio", origin: "Processos transversos de C2-C7", insertion: "1ª costela", innervation: "Plexo cervical (C3-C8)", action: "Elevação da 1ª costela, flexão lateral"},
+                {name: "Escaleno Posterior", origin: "Processos transversos de C5-C7", insertion: "2ª costela", innervation: "Plexo cervical (C6-C8)", action: "Elevação da 2ª costela"},
+                {name: "Longo do Pescoço", origin: "Corpos vertebrais de T1-T3", insertion: "Tubérculos anteriores de C2-C4", innervation: "C2-C6", action: "Flexão cervical"},
+                {name: "Longo da Cabeça", origin: "Processos transversos de C3-C6", insertion: "Base do crânio", innervation: "C1-C3", action: "Flexão da cabeça"},
+                {name: "Reto Anterior da Cabeça", origin: "Massa lateral do atlas", insertion: "Base do crânio", innervation: "C1", action: "Flexão da cabeça"},
+                {name: "Reto Lateral da Cabeça", origin: "Processo transverso do atlas", insertion: "Base do crânio", innervation: "C1", action: "Flexão lateral da cabeça"},
+                {name: "Esplênio da Cabeça", origin: "Ligamento nucal e processos espinhosos C7-T4", insertion: "Osso temporal", innervation: "N. occipital médio", action: "Extensão e rotação da cabeça"},
+                {name: "Esplênio do Pescoço", origin: "Processos espinhosos de T3-T6", insertion: "Processos transversos de C1-C3", innervation: "Ramos dorsais cervicais", action: "Extensão e rotação cervical"},
+                {name: "Semiespinhal da Cabeça", origin: "Processos transversos C4-T5", insertion: "Osso occipital", innervation: "Ramos dorsais", action: "Extensão da cabeça"},
+                {name: "Semiespinhal do Pescoço", origin: "Processos transversos T1-T5", insertion: "Processos espinhosos C2-C5", innervation: "Ramos dorsais", action: "Extensão cervical"},
+                {name: "Multífidos", origin: "Sacro e processos transversos", insertion: "Processos espinhosos", innervation: "Ramos dorsais", action: "Estabilização vertebral"},
+                {name: "Rombóide Menor", origin: "Ligamento nucal C7-T1", insertion: "Borda medial da escápula", innervation: "N. dorsal da escápula", action: "Retração da escápula"}
+            ],
+            superiores: [
+                {name: "Deltóide", origin: "Clavícula, acrômio e espinha da escápula", insertion: "Tuberosidade do úmero", innervation: "N. axilar (C5-C6)", action: "Abdução do braço (todas fibras)"},
+                {name: "Supraespinhal", origin: "Fossa supraespinhal", insertion: "Grande tubérculo do úmero", innervation: "N. supraescapular", action: "Abdução inicial do braço"},
+                {name: "Infraespinhal", origin: "Fossa infraespinhal", insertion: "Grande tubérculo do úmero", innervation: "N. supraescapular", action: "Rotação lateral do braço"},
+                {name: "Redondo Menor", origin: "Borda lateral da escápula", insertion: "Grande tubérculo do úmero", innervation: "N. axilar", action: "Rotação lateral do braço"},
+                {name: "Subescapular", origin: "Fossa subescapular", insertion: "Menor tubérculo do úmero", innervation: "N. subescapular", action: "Rotação medial do braço"},
+                {name: "Rombóide Maior", origin: "Processos espinhosos T2-T5", insertion: "Borda medial da escápula", innervation: "N. dorsal da escápula", action: "Retração e rotação descendente da escápula"},
+                {name: "Grande Dorsal", origin: "Processos espinhosos T7-L5", insertion: "Sulco intertubercular", innervation: "N. toracodorsal", action: "Extensão, adução e rotação medial do braço"},
+                {name: "Grande Peitoral", origin: "Esterno, clavícula e cartilagens costais", insertion: "Crista do tubérculo maior", innervation: "N. peitoral medial e lateral", action: "Adução, flexão e rotação medial do braço"},
+                {name: "Peitoral Menor", origin: "Cartilagens costais 3ª-5ª", insertion: "Processo coracoide", innervation: "N. peitoral medial", action: "Protração e depressão da escápula"},
+                {name: "Serrátil Anterior", origin: "Costelas 1ª-9ª", insertion: "Borda medial da escápula", innervation: "N. torácico longo", action: "Protração e rotação superior da escápula"},
+                {name: "Coracobraquial", origin: "Processo coracoide", insertion: "Terço médio do úmero", innervation: "N. musculocutâneo", action: "Flexão e adução do braço"},
+                {name: "Bíceps Braquial", origin: "Processo coracoide e tubérculo supraglenoide", insertion: "Tuberosidade do rádio", innervation: "N. musculocutâneo", action: "Flexão do cotovelo e supinação"},
+                {name: "Braquial", origin: "Face anterior do úmero", insertion: "Tuberosidade do ulna", innervation: "N. musculocutâneo", action: "Flexão do cotovelo"},
+                {name: "Tríceps Braquial", origin: "Tubérculo infraglenoide, úmero", insertion: "Olecrano", innervation: "N. radial", action: "Extensão do cotovelo"},
+                {name: "Ancôneo", origin: "Epicôndilo lateral", insertion: "Olecrano", innervation: "N. radial", action: "Extensão do cotovelo"},
+                {name: "Braquiorradial", origin: "Crista supraepicondilar lateral", insertion: "Estiloide do rádio", innervation: "N. radial", action: "Flexão do cotovelo"},
+                {name: "Extensor Radial Longo do Carpo", origin: "Crista supraepicondilar", insertion: "Base da 2ª metacarpal", innervation: "N. radial", action: "Extensão e abdução do punho"},
+                {name: "Extensor Radial Curto do Carpo", origin: "Epicôndilo lateral", insertion: "Base da 3ª metacarpal", innervation: "N. radial", action: "Extensão e abdução do punho"},
+                {name: "Extensor Ulnar do Carpo", origin: "Epicôndilo lateral", insertion: "Base da 5ª metacarpal", innervation: "N. radial", action: "Extensão e adução do punho"},
+                {name: "Extensor dos Dedos", origin: "Epicôndilo lateral", insertion: "Falanges médias e distais", innervation: "N. radial", action: "Extensão dos dedos"},
+                {name: "Extensor do Indicador", origin: "Úmero", insertion: "Falange distal do indicador", innervation: "N. radial", action: "Extensão do indicador"},
+                {name: "Extensor do Mínimo", origin: "Epicôndilo lateral", insertion: "Falange distal do mínimo", innervation: "N. radial", action: "Extensão do mínimo"},
+                {name: "Supinador", origin: "Epicôndilo lateral e ulna", insertion: "Rádio proximal", innervation: "N. radial", action: "Supinação do antebraço"},
+                {name: "Abductor Longo do Polegar", origin: "Membrana interóssea", insertion: "1ª metacarpal", innervation: "N. radial", action: "Abdução do polegar"},
+                {name: "Extensor Longo do Polegar", origin: "Úmero", insertion: "Falange distal do polegar", innervation: "N. radial", action: "Extensão do polegar"},
+                {name: "Extensor Curto do Polegar", origin: "Rádio", insertion: "Falange proximal do polegar", innervation: "N. radial", action: "Extensão da falange proximal"},
+                {name: "Flexor Radial do Carpo", origin: "Epicôndilo medial", insertion: "Base das metacarpais 2ª-3ª", innervation: "N. mediano", action: "Flexão e abdução do punho"},
+                {name: "Palmar Longo", origin: "Epicôndilo medial", insertion: "Fáscia palmar", innervation: "N. mediano", action: "Flexão do punho"},
+                {name: "Flexor Ulnar do Carpo", origin: "Epicôndilo medial", insertion: "Pisiforme", innervation: "N. ulnar", action: "Flexão e adução do punho"},
+                {name: "Flexor Superficial dos Dedos", origin: "Epicôndilo medial", insertion: "Falanges médias", innervation: "N. mediano", action: "Flexão dos dedos"},
+                {name: "Pronador Redondo", origin: "Epicôndilo medial", insertion: "Rádio", innervation: "N. mediano", action: "Pronação do antebraço"}
+            ],
+            tronco: [
+                {name: "Eretor da Espinha", origin: "Sacro e ílio", insertion: "Costelas e processos espinhosos", innervation: "Ramos dorsais", action: "Extensão da coluna"},
+                {name: "Quadrado Lombar", origin: "Crista ilíaca", insertion: "12ª costela e L1-L4", innervation: "T12-L3", action: "Flexão lateral do tronco"},
+                {name: "Esplênio da Cabeça", origin: "Ligamento nucal e C7-T4", insertion: "Osso temporal", innervation: "N. occipital", action: "Extensão e rotação da cabeça"},
+                {name: "Iliocostal", origin: "Ílio e sacro", insertion: "Ângulos das costelas", innervation: "Ramos dorsais", action: "Extensão lateral da coluna"},
+                {name: "Longuíssimo", origin: "Processos transversos", insertion: "Costelas e processos transversos", innervation: "Ramos dorsais", action: "Extensão da coluna"},
+                {name: "Espinhal", origin: "Processos espinhosos", insertion: "Processos espinhosos", innervation: "Ramos dorsais", action: "Extensão da coluna"},
+                {name: "Interespinhais", origin: "Processos espinhosos", insertion: "Processos espinhosos", innervation: "Ramos dorsais", action: "Extensão da coluna"},
+                {name: "Intertransversários", origin: "Processos transversos", insertion: "Processos transversos", innervation: "Ramos dorsais", action: "Flexão lateral"},
+                {name: "Multífidos", origin: "Sacro", insertion: "Processos espinhosos", innervation: "Ramos dorsais", action: "Estabilização"},
+                {name: "Rotações", origin: "Processos transversos", insertion: "Vértebra superior", innervation: "Ramos dorsais", action: "Rotação da coluna"},
+                {name: "Semiespinhais", origin: "Processos transversos", insertion: "Processos espinhosos", innervation: "Ramos dorsais", action: "Extensão da coluna"},
+                {name: "Trapézio (porção média)", origin: "Processos espinhosos C7-T3", insertion: "Espinha da escápula", innervation: "N. acessório", action: "Retração da escápula"},
+                {name: "Trapézio (porção inferior)", origin: "Processos espinhosos T4-T12", insertion: "Espinha da escápula", innervation: "N. acessório", action: "Rotação descendente da escápula"},
+                {name: "Rombóide Menor", origin: "C7-T1", insertion: "Escápula", innervation: "N. dorsal da escápula", action: "Retração da escápula"},
+                {name: "Rombóide Maior", origin: "T2-T5", insertion: "Escápula", innervation: "N. dorsal da escápula", action: "Retração da escápula"},
+                {name: "Levantador da Escápula", origin: "Processos transversos C1-C4", insertion: "Ângulo superior da escápula", innervation: "N. dorsal da escápula", action: "Elevação da escápula"},
+                {name: "Serrátil Posterior Superior", origin: "Ligamento nucal C7-T3", insertion: "Costelas 2ª-5ª", innervation: "T2-T5", action: "Elevação das costelas (inspiração)"},
+                {name: "Serrátil Posterior Inferior", origin: "T11-L3", insertion: "Costelas 9ª-12ª", innervation: "T9-T12", action: "Depressão das costelas (expiração)"},
+                {name: "Intercostais Externos", origin: "Borda inferior da costela", insertion: "Borda superior da costela inferior", innervation: "N. intercostais", action: "Elevação das costelas"},
+                {name: "Intercostais Internos", origin: "Borda superior da costela", insertion: "Borda inferior da costela superior", innervation: "N. intercostais", action: "Depressão das costelas"},
+                {name: "Intercostais Intimos", origin: "Costelas", insertion: "Costelas", innervation: "N. intercostais", action: "Acesso respiratório"},
+                {name: "Transverso do Tórax", origin: "Esterno", insertion: "Cartilagens costais", innervation: "N. intercostais", action: "Depressão das costelas"},
+                {name: "Subcostais", origin: "Face interna das costelas", insertion: "Costela inferior", innervation: "N. intercostais", action: "Depressão das costelas"},
+                {name: "Diafragma", origin: "Esterno, costelas e coluna", insertion: "Tendão central", innervation: "N. frênico", action: "Inspiração principal"},
+                {name: "Reto Abdominal", origin: "Sínfise púbica", insertion: "Xifoide e cartilagens costais", innervation: "T7-T12", action: "Flexão do tronco"}
+            ],
+            inferiores: [
+                {name: "Iliopsoas", origin: "Fossa ilíaca e corpos vertebrais T12-L5", insertion: "Trocânter menor", innervation: "L1-L3", action: "Flexão do quadril"},
+                {name: "Reto Femoral", origin: "Espinha ilíaca anterior inferior", insertion: "Tuberosidade da tíbia", innervation: "N. femoral", action: "Flexão do quadril e extensão do joelho"},
+                {name: "Vasto Lateral", origin: "Trocânter maior e linha áspera", insertion: "Tuberosidade da tíbia", innervation: "N. femoral", action: "Extensão do joelho"},
+                {name: "Vasto Medial", origin: "Linha áspera", insertion: "Tuberosidade da tíbia", innervation: "N. femoral", action: "Extensão do joelho"},
+                {name: "Vasto Intermédio", origin: "Face anterior do fêmur", insertion: "Tuberosidade da tíbia", innervation: "N. femoral", action: "Extensão do joelho"},
+                {name: "Sartório", origin: "Espinha ilíaca anterior superior", insertion: "Pes anserino", innervation: "N. femoral", action: "Flexão, abdução e rotação lateral do quadril"},
+                {name: "Pectíneo", origin: "Púbis", insertion: "Linha pectínea", innervation: "N. femoral e obturador", action: "Adução e flexão do quadril"},
+                {name: "Adutor Longo", origin: "Púbis", insertion: "Linha áspera", innervation: "N. obturador", action: "Adução do quadril"},
+                {name: "Adutor Curto", origin: "Púbis", insertion: "Linha áspera", innervation: "N. obturador", action: "Adução do quadril"},
+                {name: "Adutor Magno", origin: "Ísquio e púbis", insertion: "Linha áspera e epicôndilo medial", innervation: "N. obturador e ciático", action: "Adução do quadril"},
+                {name: "Grácil", origin: "Púbis", insertion: "Pes anserino", innervation: "N. obturador", action: "Adução do quadril e flexão do joelho"},
+                {name: "Tensor da Fáscia Lata", origin: "Espinha ilíaca anterior superior", insertion: "Trato iliotibial", innervation: "N. glúteo superior", action: "Flexão, abdução e rotação medial do quadril"},
+                {name: "Glúteo Máximo", origin: "Ílio, sacro e cóccix", insertion: "Trato iliotibial e tuberosidade glútea", innervation: "N. glúteo inferior", action: "Extensão e rotação lateral do quadril"},
+                {name: "Glúteo Médio", origin: "Fossa ilíaca glútea", insertion: "Trocânter maior", innervation: "N. glúteo superior", action: "Abdução e rotação medial do quadril"},
+                {name: "Glúteo Menor", origin: "Fossa ilíaca", insertion: "Trocânter maior", innervation: "N. glúteo superior", action: "Abdução e rotação medial do quadril"},
+                {name: "Piriforme", origin: "Sacro", insertion: "Trocânter maior", innervation: "S1-S2", action: "Rotação lateral e abdução do quadril"},
+                {name: "Gêmeo Superior", origin: "Ísquio", insertion: "Trocânter maior", innervation: "N. obturador interno", action: "Rotação lateral do quadril"},
+                {name: "Obturador Interno", origin: "Membrana obturadora", insertion: "Trocânter maior", innervation: "N. obturador interno", action: "Rotação lateral do quadril"},
+                {name: "Gêmeo Inferior", origin: "Ísquio", insertion: "Trocânter maior", innervation: "N. quadrado femoral", action: "Rotação lateral do quadril"},
+                {name: "Quadrado Femoral", origin: "Tuberosidade isquiática", insertion: "Trocânter menor", innervation: "N. quadrado femoral", action: "Rotação lateral do quadril"},
+                {name: "Bíceps Femoral", origin: "Tuberosidade isquiática", insertion: "Cabeça da fíbula", innervation: "N. ciático", action: "Extensão do quadril e flexão do joelho"},
+                {name: "Semitendíneo", origin: "Tuberosidade isquiática", insertion: "Pes anserino", innervation: "N. ciático", action: "Extensão do quadril e flexão do joelho"},
+                {name: "Semimembranáceo", origin: "Tuberosidade isquiática", insertion: "Condilo medial da tíbia", innervation: "N. ciático", action: "Extensão do quadril e flexão do joelho"},
+                {name: "Poplíteo", origin: "Condilo lateral do fêmur", insertion: "Face posterior da tíbia", innervation: "N. tibial", action: "Flexão e rotação medial do joelho"},
+                {name: "Tibial Anterior", origin: "Tíbia", insertion: "Medial do pé", innervation: "N. fibular profundo", action: "Dorsiflexão e inversão do pé"},
+                {name: "Extensor Longo dos Dedos", origin: "Fíbula", insertion: "Falanges distais", innervation: "N. fibular profundo", action: "Extensão dos dedos"},
+                {name: "Extensor Longo do Hálux", origin: "Fíbula", insertion: "Falange distal do hálux", innervation: "N. fibular profundo", action: "Extensão do hálux"},
+                {name: "Fibular Longo", origin: "Fíbula", insertion: "Base da 1ª metatarsal", innervation: "N. fibular superficial", action: "Eversão e flexão plantar"},
+                {name: "Fibular Curto", origin: "Fíbula", insertion: "Base da 5ª metatarsal", innervation: "N. fibular superficial", action: "Eversão do pé"},
+                {name: "Gastrocnêmio", origin: "Condilos do fêmur", insertion: "Calcâneo", innervation: "N. tibial", action: "Flexão plantar e flexão do joelho"},
+                {name: "Sóleo", origin: "Tíbia e fíbula", insertion: "Calcâneo", innervation: "N. tibial", action: "Flexão plantar"}
+            ]
+        };
 
-<!-- LISTA -->
-<section id="lista" class="section">
-    <div class="grid" id="grid"></div>
-</section>
+        // PERGUNTAS DO QUIZ - 20 QUESTÕES
+        const quizQuestions = [
+            {
+                question: "Qual músculo é responsável pela rotação contralateral da cabeça e flexão cervical?",
+                options: ["Trapézio", "Esternocleidomastoideo", "Escaleno Anterior", "Esplênio da Cabeça"],
+                correct: 1,
+                explanation: "O Esternocleidomastoideo é o principal músculo responsável pela rotação contralateral da cabeça e pela flexão cervical."
+            },
+            {
+                question: "Qual o nervo que inerva o músculo deltóide?",
+                options: ["N. Musculocutâneo", "N. Axilar", "N. Radial", "N. Mediano"],
+                correct: 1,
+                explanation: "O Nervo Axilar (C5-C6) inerva o músculo deltóide, responsável pela abdução do braço."
+            },
+            {
+                question: "O músculo Bíceps Braquial tem ação principal em qual articulação?",
+                options: ["Ombro", "Cotovelo (flexão)", "Punho", "Todas as anteriores"],
+                correct: 3,
+                explanation: "O Bíceps Braquial atua na flexão do cotovelo, supinação do antebraço e também auxilia na flexão do ombro."
+            },
+            {
+                question: "Qual músculo é conhecido como 'músculo boxeador'?",
+                options: ["Grande Dorsal", "Deltóide", "Serrátil Anterior", "Peitoral Maior"],
+                correct: 0,
+                explanation: "O Grande Dorsal é chamado de 'músculo boxeador' por ser o principal responsável pelo movimento de extensão e adução do braço, como no golpe direto do boxe."
+            },
+            {
+                question: "Qual a origem do músculo Iliopsoas?",
+                options: ["Sacro e ílio", "Fossa ilíaca e corpos vertebrais T12-L5", "Tuberosidade isquiática", "Ramo anterior do púbis"],
+                correct: 1,
+                explanation: "O Iliopsoas origina-se da fossa ilíaca (músculo iliaco) e dos corpos vertebrais T12-L5 (músculo psoas maior)."
+            },
+            {
+                question: "Qual nervo inerva os músculos extensores do carpo?",
+                options: ["N. Mediano", "N. Ulnar", "N. Radial", "N. Musculocutâneo"],
+                correct: 2,
+                explanation: "O Nervo Radial inerva todos os músculos extensores do carpo e dos dedos."
+            },
+            {
+                question: "O músculo Glúteo Máximo é inervado por qual nervo?",
+                options: ["N. Glúteo Superior", "N. Glúteo Inferior", "N. Ciático", "N. Obturador"],
+                correct: 1,
+                explanation: "O Nervo Glúteo Inferior inerva o Glúteo Máximo, principal extensor do quadril."
+            },
+            {
+                question: "Qual músculo forma o 'Pés Anserino'?",
+                options: ["Sartório, Grácil e Semitendíneo", "Bíceps Femoral, Semitendíneo e Semimembranáceo", "Vasto Lateral, Vasto Medial e Reto Femoral", "Tibial Anterior e Fibular Longo"],
+                correct: 0,
+                explanation: "O Pés Anserino é formado pela inserção conjunta do Sartório, Grácil e Semitendíneo na face medial da tíbia."
+            },
+            {
+                question: "Qual a principal ação do músculo diafragma?",
+                options: ["Expiração forçada", "Inspiração", "Pressão abdominal", "Tosse"],
+                correct: 1,
+                explanation: "O Diafragma é o principal músculo da inspiração. Quando se contrai, desce e aumenta o volume torácico."
+            },
+            {
+                question: "O músculo Trapézio é inervado por qual nervo?",
+                options: ["N. Acessório (XI)", "N. Dorsal da Escápula", "N. Toracodorsal", "N. Subescapular"],
+                correct: 0,
+                explanation: "O Nervo Acessório (XI) inerva o músculo trapézio, responsável pelos movimentos da escápula."
+            },
+            {
+                question: "Qual músculo é responsável pela supinação do antebraço?",
+                options: ["Braquiorradial", "Bíceps Braquial e Supinador", "Pronador Redondo", "Ancôneo"],
+                correct: 1,
+                explanation: "O Bíceps Braquial e o Supinador são os principais responsáveis pela supinação do antebraço."
+            },
+            {
+                question: "Qual a inserção do músculo Serrátil Anterior?",
+                options: ["Borda medial da escápula", "Processo coracoide", "Tubérculo do supraespinhal", "Crista do tubérculo maior"],
+                correct: 0,
+                explanation: "O Serrátil Anterior insere-se na borda medial da escápula e é responsável pela protração e rotação superior da escápula."
+            },
+            {
+                question: "Qual músculo do quadril é inervado pelo Nervo Femoral?",
+                options: ["Glúteo Máximo", "Iliopsoas", "Reto Femoral", "Adutor Magno"],
+                correct: 2,
+                explanation: "O Reto Femoral é inervado pelo Nervo Femoral e cruza tanto a articulação do quadril quanto do joelho."
+            },
+            {
+                question: "Qual a origem dos músculos isquiotibiais (Bíceps Femoral, Semitendíneo e Semimembranáceo)?",
+                options: ["Espinha ilíaca anterior", "Tuberosidade isquiática", "Ramo do púbis", "Fossa ilíaca"],
+                correct: 1,
+                explanation: "Todos os músculos isquiotibiais originam-se da tuberosidade isquiática do osso isquio."
+            },
+            {
+                question: "Qual músculo é responsável pela dorsiflexão do pé?",
+                options: ["Gastrocnêmio", "Sóleo", "Tibial Anterior", "Fibular Longo"],
+                correct: 2,
+                explanation: "O Tibial Anterior é o principal dorsiflexor do pé, inervado pelo Nervo Fibular Profundo."
+            },
+            {
+                question: "Qual músculo é conhecido como 'músculo em serra'?",
+                options: ["Serrátil Anterior", "Serrátil Posterior", "Intercostais", "Diafragma"],
+                correct: 0,
+                explanation: "O Serrátil Anterior é chamado de 'músculo em serra' devido às suas múltiplas inserções nas costelas."
+            },
+            {
+                question: "Qual a ação do músculo Pectíneo?",
+                options: ["Adução e flexão do quadril", "Abdução do quadril", "Extensão do quadril", "Rotação lateral do quadril"],
+                correct: 0,
+                explanation: "O Pectíneo realiza adução e flexão do quadril, sendo inervado pelos nervos femoral e obturador."
+            },
+            {
+                question: "Qual nervo inerva os músculos flexores do carpo?",
+                options: ["N. Radial", "N. Mediano e N. Ulnar", "N. Musculocutâneo", "N. Axilar"],
+                correct: 1,
+                explanation: "O Flexor Radial do Carpo e Palmar Longo são inervados pelo N. Mediano, enquanto o Flexor Ulnar do Carpo é inervado pelo N. Ulnar."
+            },
+            {
+                question: "Qual músculo é responsável pela flexão do cotovelo e é inervado pelo N. Musculocutâneo?",
+                options: ["Tríceps Braquial", "Braquial", "Ancôneo", "Extensor Radial"],
+                correct: 1,
+                explanation: "O músculo Braquial é um poderoso flexor do cotovelo, inervado pelo Nervo Musculocutâneo."
+            },
+            {
+                question: "Qual a principal função do músculo Glúteo Médio?",
+                options: ["Extensão do quadril", "Abdução e rotação medial do quadril", "Adução do quadril", "Flexão do quadril"],
+                correct: 1,
+                explanation: "O Glúteo Médio é o principal abductor do quadril e também realiza rotação medial, sendo inervado pelo N. Glúteo Superior."
+            }
+        ];
 
-<script>
-const muscles = [
-{nome:"Frontal",regiao:"Cabeça",origem:"Gálea aponeurótica",insercao:"Pele da fronte",acao:"Eleva sobrancelhas",inervacao:"Facial VII"},
-{nome:"Occipital",regiao:"Cabeça",origem:"Occipital",insercao:"Gálea",acao:"Traciona couro cabeludo",inervacao:"Facial VII"},
-{nome:"Orbicular dos Olhos",regiao:"Cabeça",origem:"Margem orbitária",insercao:"Pálpebras",acao:"Fecha os olhos",inervacao:"Facial VII"},
-{nome:"Orbicular da Boca",regiao:"Cabeça",origem:"Maxila e mandíbula",insercao:"Lábios",acao:"Fecha a boca",inervacao:"Facial VII"},
-{nome:"Masseter",regiao:"Cabeça",origem:"Arco zigomático",insercao:"Mandíbula",acao:"Elevação da mandíbula",inervacao:"Trigêmeo V3"},
-{nome:"Temporal",regiao:"Cabeça",origem:"Fossa temporal",insercao:"Mandíbula",acao:"Elevação da mandíbula",inervacao:"Trigêmeo V3"},
-/* --- continua até 100 --- */
-];
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
 
-let index = 0;
+        // FUNÇÃO PARA MOSTRAR SEÇÃO
+        function showSection(sectionId) {
+            // Esconde todas as seções
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Mostra a seção selecionada
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Renderiza os cards se necessário
+            if (sectionId !== 'quiz' && !document.getElementById(sectionId + '-grid').innerHTML) {
+                renderCards(sectionId);
+            }
+        }
 
-function show(){
-    const m = muscles[index];
-    document.getElementById("nome").innerText = m.nome;
-    document.getElementById("regiao").innerText = m.regiao;
-    document.getElementById("origem").innerText = m.origem;
-    document.getElementById("insercao").innerText = m.insercao;
-    document.getElementById("acao").innerText = m.acao;
-    document.getElementById("inervacao").innerText = m.inervacao;
-    document.getElementById("contador").innerText = (index+1)+" / "+muscles.length;
-}
+        // FUNÇÃO PARA RENDERIZAR CARDS
+        function renderCards(category) {
+            const grid = document.getElementById(category + '-grid');
+            const muscleList = muscles[category];
+            
+            muscleList.forEach((muscle, index) => {
+                const card = document.createElement('div');
+                card.className = 'muscle-card';
+                card.innerHTML = `
+                    <h3>🩺 ${muscle.name}</h3>
+                    <div class="muscle-info">
+                        <strong>📍 ORIGEM:</strong>
+                        <span>${muscle.origin}</span>
+                    </div>
+                    <div class="muscle-info">
+                        <strong>🎯 INSERÇÃO:</strong>
+                        <span>${muscle.insertion}</span>
+                    </div>
+                    <div class="muscle-info">
+                        <strong>⚡ INERVAÇÃO:</strong>
+                        <span>${muscle.innervation}</span>
+                    </div>
+                    <div class="muscle-info">
+                        <strong>💪 AÇÃO:</strong>
+                        <span>${muscle.action}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-function next(){ if(index < muscles.length-1){ index++; show(); } }
-function prev(){ if(index > 0){ index--; show(); } }
+        // FUNÇÕES DO QUIZ
+        function startQuiz() {
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-questions').classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+            showQuestion();
+        }
 
-function showSection(id){
-    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
-    event.target.classList.add("active");
-}
+        function showQuestion() {
+            answered = false;
+            const q = quizQuestions[currentQuestion];
+            const container = document.getElementById('question-container');
+            
+            // Atualiza barra de progresso
+            const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            
+            container.innerHTML = `
+                <div class="question">${currentQuestion + 1}. ${q.question}</div>
+                <div class="options" id="options">
+                    ${q.options.map((opt, i) => `
+                        <div class="option" onclick="selectOption(${i})">${String.fromCharCode(65 + i)}. ${opt}</div>
+                    `).join('')}
+                </div>
+                <div id="explanation" class="explanation hidden"></div>
+                <button class="quiz-btn hidden" id="next-btn" onclick="nextQuestion()">Próxima Questão →</button>
+            `;
+        }
 
-function loadList(){
-    const grid = document.getElementById("grid");
-    grid.innerHTML="";
-    muscles.forEach((m,i)=>{
-        const d = document.createElement("div");
-        d.className="item";
-        d.innerHTML=`<h4>${m.nome}</h4><small>${m.regiao}</small>`;
-        d.onclick=()=>{index=i;showSection('flash');show();}
-        grid.appendChild(d);
-    });
-}
+        function selectOption(index) {
+            if (answered) return;
+            answered = true;
+            
+            const q = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.correct) {
+                    opt.classList.add('correct');
+                } else if (i === index && i !== q.correct) {
+                    opt.classList.add('wrong');
+                }
+            });
+            
+            if (index === q.correct) {
+                score++;
+            }
+            
+            // Mostra explicação
+            const explanation = document.getElementById('explanation');
+            explanation.innerHTML = `<strong>📚 Explicação:</strong> ${q.explanation}`;
+            explanation.classList.remove('hidden');
+            
+            // Mostra botão próximo
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === quizQuestions.length - 1) {
+                nextBtn.textContent = 'Ver Resultado 🎯';
+            }
+        }
 
-show();
-loadList();
-</script>
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizQuestions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
 
+        function showResult() {
+            document.getElementById('quiz-questions').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            const percentage = (score / quizQuestions.length) * 100;
+            document.getElementById('final-score').textContent = `${score}/${quizQuestions.length}`;
+            
+            let feedback = '';
+            if (percentage >= 90) {
+                feedback = '🌟 Excelente! Você é um expert em anatomia muscular!';
+            } else if (percentage >= 70) {
+                feedback = '👏 Muito bom! Você conhece bem a anatomia!';
+            } else if (percentage >= 50) {
+                feedback = '👍 Bom! Continue estudando para melhorar!';
+            } else {
+                feedback = '📚 Continue praticando! Revise os cards de estudo.';
+            }
+            
+            document.getElementById('feedback').textContent = feedback;
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-start').classList.remove('hidden');
+            currentQuestion = 0;
+            score = 0;
+        }
+
+        // Renderiza os cards iniciais (pescoço)
+        renderCards('pescoco');
+    </script>
 </body>
 </html>
