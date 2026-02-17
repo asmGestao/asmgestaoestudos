@@ -3,62 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Muscle Highlighting</title>
-    <style>
-        /* Basic styles for SVG and muscle highlighting */
-        .muscle {
-            fill: lightgray;
-            transition: fill 0.3s;
-        }
-        .muscle:hover {
-            fill: orange;
-            cursor: pointer;
-        }
-        .highlight {
-            fill: red;
-        }
-        .detail-panel {
-            display: none;
-            position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            z-index: 10;
-        }
-    </style>
+    <title>Atlas</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="detail-panel" id="detailPanel"></div>
-    <svg id="muscleDiagram" width="600" height="400">
-        <!-- Example SVG for muscle groups -->
-        <rect class="muscle" id="muscle1" x="50" y="20" width="100" height="100" data-name="Bicep" data-info="Biceps are the primary muscle for arm flexion."></rect>
-        <rect class="muscle" id="muscle2" x="200" y="20" width="100" height="100" data-name="Tricep" data-info="Triceps are responsible for extending the elbow."></rect>
-        <!-- Add more muscle groups as needed -->
-    </svg>
-    <script>
-        const muscles = document.querySelectorAll('.muscle');
-        const detailPanel = document.getElementById('detailPanel');
-        muscles.forEach(muscle => {
-            muscle.addEventListener('click', function(event) {
-                const name = this.getAttribute('data-name');
-                const info = this.getAttribute('data-info');
-                detailPanel.innerHTML = `<strong>${name}</strong><br>${info}`;
-                detailPanel.style.display = 'block';
-                detailPanel.style.left = event.pageX + 'px';
-                detailPanel.style.top = event.pageY + 'px';
-                muscles.forEach(m => m.classList.remove('highlight'));
-                this.classList.add('highlight');
-            });
-            muscle.addEventListener('mouseover', function(event) {
-                detailPanel.innerHTML = `<strong>${this.getAttribute('data-name')}</strong><br>${this.getAttribute('data-info')}`;
-                detailPanel.style.display = 'block';
-                detailPanel.style.left = event.pageX + 'px';
-                detailPanel.style.top = (event.pageY) + 'px';
-            });
-            muscle.addEventListener('mouseout', function() {
-                detailPanel.style.display = 'none';
-            });
-        });
-    </script>
+    <header>
+        <h1>Welcome to Atlas</h1>
+    </header>
+    <main>
+        <p>This is the original content of atlas.html from commit 305065d579772ba9622ac2d9495aac721d15a2f2.</p>
+    </main>
+    <footer>
+        <p>&copy; 2026 Atlas. All rights reserved.</p>
+    </footer>
 </body>
 </html>
